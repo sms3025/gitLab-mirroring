@@ -1,9 +1,13 @@
 const express = require('express');
+const path = require('path')
 
+
+const diaryRoutes = require('./routes/diaries');
 const app = express();
+app.use('/diary', diaryRoutes);
 
 app.get('/', (req, res) => {
-    res.send("hi");
+    res.render('home');
 })
 
 app.listen(3000, () => {
