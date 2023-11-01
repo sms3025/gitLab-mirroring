@@ -13,7 +13,6 @@ ImageSchema.virtual('thumbnail').get(function () {
 });
 
 const ExploreSchema = new Schema({
-    exploreid: String,
     userid: {
         type: Schema.Types.ObjectId,
         ref: 'User'

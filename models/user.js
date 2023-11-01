@@ -11,11 +11,11 @@ ImageSchema.virtual('thumbnail').get(function () {
 });
 
 const UserSchema = new Schema({
-    userid: String,
     name: String,
     passwd: String,
     nickname: String,
-    image: [ImageSchema]
+    image: [ImageSchema],
+    goal: [{ text: String }]
 });
 
 module.exports = mongoose.model('User', UserSchema);

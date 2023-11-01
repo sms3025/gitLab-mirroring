@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const User = require('./user');
 const Crew = require('./crew');
+const DiaryComment = require('./dairycomment');
 const Schema = mongoose.Schema;
 
 const ImageSchema = new Schema({
@@ -13,7 +14,6 @@ ImageSchema.virtual('thumbnail').get(function () {
 });
 
 const DiarySchema = new Schema({
-    dairyid: String,
     userid: {
         type: Schema.Types.ObjectId,
         ref: 'User'
@@ -27,7 +27,7 @@ const DiarySchema = new Schema({
     startdate: String,
     time: Number,
     memo: String,
-    like: Number
+    like: Number,
 });
 
 module.exports = mongoose.model('Diary', DiarySchema);

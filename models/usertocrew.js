@@ -1,23 +1,18 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const User = require('./user');
-
-const ImageSchema = new Schema({
-    url: String,
-    filename: String
-});
-
-ImageSchema.virtual('thumbnail').get(function () {
-    return this.url.replace('/upload', '/upload/w_200');
-});
+const Crew = require('./crew');
 
 const CrewSchema = new Schema({
-    crewname: String,
-    author: {
+    userid: {
         type: Schema.Types.ObjectId,
         ref: 'User'
     },
-    crewimage: [ImageSchema]
+    crewid: {
+        type: Schema.Types.ObjectId,
+        ref: 'Crew'
+    },
+
 });
 
 module.exports = mongoose.model('Crew', CrewSchema);

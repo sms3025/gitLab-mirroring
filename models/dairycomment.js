@@ -4,11 +4,11 @@ const User = require('./user');
 const Schema = mongoose.Schema;
 
 const DiaryCommentSchema = new Schema({
-    dairyid: {
+    post: {
         type: Schema.Types.ObjectId,
         ref: 'Diary'
     },
-    userid: {
+    author: {
         type: Schema.Types.ObjectId,
         ref: 'User'
     },

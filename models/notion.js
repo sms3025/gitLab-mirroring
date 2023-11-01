@@ -13,7 +13,6 @@ ImageSchema.virtual('thumbnail').get(function () {
 });
 
 const NotionSchema = new Schema({
-    notionid: String,
     userid: {
         type: Schema.Types.ObjectId,
         ref: 'User'

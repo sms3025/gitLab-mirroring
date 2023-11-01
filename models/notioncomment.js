@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const User = require('./user');
 const Crew = require('./crew');
+const Notion = require('./notion')
 const Schema = mongoose.Schema;
 
 const ImageSchema = new Schema({
@@ -13,8 +14,11 @@ ImageSchema.virtual('thumbnail').get(function () {
 });
 
 const NotionCommentSchma = new Schema({
-    notionid: String,
-    userid: {
+    post: {
+        type: Schema.Types.ObjectId,
+        ref: 'Notion'
+    },
+    author: {
         type: Schema.Types.ObjectId,
         ref: 'User'
     },
