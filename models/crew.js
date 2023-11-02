@@ -17,7 +17,11 @@ const CrewSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'User'
     },
-    crewimage: [ImageSchema]
+    crewimage: [ImageSchema],
+    users: [{
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    }]
 });
 
 module.exports = mongoose.model('Crew', CrewSchema);
