@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-const User = require('./user');
 
 const ImageSchema = new Schema({
     url: String,
@@ -13,11 +12,11 @@ ImageSchema.virtual('thumbnail').get(function () {
 
 const CrewSchema = new Schema({
     crewname: String,
-    author: {
+    manager: {
         type: Schema.Types.ObjectId,
         ref: 'User'
     },
-    crewimage: [ImageSchema],
+    image: [ImageSchema],
     users: [{
         type: Schema.Types.ObjectId,
         ref: 'User'

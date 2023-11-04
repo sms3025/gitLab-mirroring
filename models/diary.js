@@ -1,7 +1,4 @@
 const mongoose = require('mongoose');
-const User = require('./user');
-const Crew = require('./crew');
-const DiaryComment = require('./dairycomment');
 const Schema = mongoose.Schema;
 
 const ImageSchema = new Schema({
@@ -14,20 +11,28 @@ ImageSchema.virtual('thumbnail').get(function () {
 });
 
 const DiarySchema = new Schema({
-    userid: {
+    author: {
         type: Schema.Types.ObjectId,
         ref: 'User'
     },
-    crewid: {
+    crew: {
         type: Schema.Types.ObjectId,
         ref: 'Crew'
     },
     crewimage: [ImageSchema],
     type: String,
-    startdate: String,
+    startdate: Date,
     time: Number,
     memo: String,
     like: Number,
+    comments: [{
+        type: Schema.Types.ObjectId,
+        ref: 'DiaryComment'
+    }],
+    uploadtime: {
+        type: Date,
+        index: -1
+    }
 });
 
 module.exports = mongoose.model('Diary', DiarySchema);

@@ -1,6 +1,4 @@
 const mongoose = require('mongoose');
-const User = require('./user');
-const Crew = require('./crew');
 const Schema = mongoose.Schema;
 
 const ImageSchema = new Schema({
@@ -13,17 +11,26 @@ ImageSchema.virtual('thumbnail').get(function () {
 });
 
 const NotionSchema = new Schema({
-    userid: {
+    author: {
         type: Schema.Types.ObjectId,
         ref: 'User'
     },
-    crewid: {
+    crew: {
         type: Schema.Types.ObjectId,
         ref: 'Crew'
     },
-    crewimage: [ImageSchema],
+    image: [ImageSchema],
     text: String,
-    like: Number
+    like: Number,
+    comments: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Notioncomment'
+    }],
+    uploadtime: {
+        type: Date,
+        index: -1
+    }
+
 });
 
 module.exports = mongoose.model('Notion', NotionSchema);

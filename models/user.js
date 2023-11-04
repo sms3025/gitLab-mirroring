@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const Crew = require('./crew');
 const Schema = mongoose.Schema;
 
 const ImageSchema = new Schema({
@@ -13,6 +12,7 @@ ImageSchema.virtual('thumbnail').get(function () {
 
 const UserSchema = new Schema({
     name: String,
+    loginid: String,
     passwd: String,
     nickname: String,
     image: [ImageSchema],

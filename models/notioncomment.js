@@ -1,7 +1,4 @@
 const mongoose = require('mongoose');
-const User = require('./user');
-const Crew = require('./crew');
-const Notion = require('./notion')
 const Schema = mongoose.Schema;
 
 const ImageSchema = new Schema({
@@ -23,6 +20,10 @@ const NotionCommentSchma = new Schema({
         ref: 'User'
     },
     text: String,
+    uploadtime: {
+        type: Date,
+        index: 1
+    }
 });
 
 module.exports = mongoose.model('NotionComment', NotionCommentSchma);

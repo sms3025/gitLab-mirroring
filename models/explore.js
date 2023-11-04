@@ -1,6 +1,4 @@
 const mongoose = require('mongoose');
-const User = require('./user');
-const Crew = require('./crew');
 const Schema = mongoose.Schema;
 
 const ImageSchema = new Schema({
@@ -13,17 +11,21 @@ ImageSchema.virtual('thumbnail').get(function () {
 });
 
 const ExploreSchema = new Schema({
-    userid: {
+    author: {
         type: Schema.Types.ObjectId,
         ref: 'User'
     },
-    crewid: {
+    crew: {
         type: Schema.Types.ObjectId,
         ref: 'Crew'
     },
     title: String,
     text: String,
-    crewimage: [ImageSchema]
+    crewimage: [ImageSchema],
+    uploadtime: {
+        type: Date,
+        index: -1
+    }
 });
 
 module.exports = mongoose.model('Explore', ExploreSchema);
