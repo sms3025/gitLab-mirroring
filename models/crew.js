@@ -19,7 +19,7 @@ const CrewSchema = new Schema({
     image: [ImageSchema],
     users: [{
         type: Schema.Types.ObjectId,
-        ref: 'User'
+        ref: 'User', 
     }]
 });
 
