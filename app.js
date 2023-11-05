@@ -1,22 +1,30 @@
 const express = require('express');
+const mongoose = require('mongoose');
 const path = require('path')
 const app = express();
 const session = express('express-session');
 const ExpressError = require('./utils/ExpressError');
+const exp = require('constants');
+
+const dbUrl = 'mongodb://127.0.0.1:27017/health-crew';
+
+const userRoutes = require('./routes/users');
 const diaryRoutes = require('./routes/diaries');
 const crewRoutes = require('./routes/crews');
-const exp = require('constants');
-const dbUrl = 'mongodb://127.0.0.1:27017/health-crew';
-mongoose.connect(dbUrl);
 
-const db = mongoose.connection;
-db.on("error", console.error.bind(console, "connection error:"));
-db.once("open", () => {
-    console.log("Database connected");
-});
+mongoose.connect(dbUrl)
+    .then(() => {
+        console.log("MONGO CONNECTION OPEN!!");
+    })
+    .catch(err => {
+        console.log("OH NO MONGO CONNECTION ERROR");
+        console.log(err);
+    })
 
+app.use('/', userRoutes)
 app.use('/diary', diaryRoutes);
-app.use('/crews', crewRoutes);
+app.use('/crew', crewRoutes);
+app.use('/explore')
 
 
 app.get('/', (req, res) => {
