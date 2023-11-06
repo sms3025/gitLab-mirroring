@@ -5,14 +5,16 @@ const ExpressError = require('../utils/ExpressError');
 const catchAsync = require('../utils/catchAsync');
 
 router.route('/')
-    .get(catchAsync(async (res, req) => {
+    .get(catchAsync(async (req, res) => {
 
     }))
-    .post(catchAsync(async (res, req) => {
+    .post(catchAsync(async (req, res) => {
 
     }))
 
 router.route('/new')
-    .get(catchAsync(async (res, req) => {
+    .get(catchAsync(async (req, res) => {
 
     }))
+
+module.exports = router;

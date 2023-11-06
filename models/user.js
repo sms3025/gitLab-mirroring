@@ -12,12 +12,21 @@ ImageSchema.virtual('thumbnail').get(function () {
 });
 
 const UserSchema = new Schema({
+    name: {
+        type: String,
+        required: true,
+    },
     loginid: {
         type: String,
         required: true,
         unique: true
     },
-    nickname: String,
+    //password: String,
+    nickname: {
+        type: String,
+        required: true,
+        unique: true
+    },
     image: [ImageSchema],
     goal: [{ text: String }],
     crews: [{
@@ -27,7 +36,9 @@ const UserSchema = new Schema({
 
 });
 
-UserSchema.plugin(passportLocalMongoose);
+UserSchema.plugin(passportLocalMongoose, {
+    usernameField: 'loginid'
+});
 
 
 
