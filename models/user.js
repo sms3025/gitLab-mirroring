@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const passportLocalMongoose = require('passport-local-mongoose');
 const Schema = mongoose.Schema;
 
 const ImageSchema = new Schema({
@@ -11,10 +12,21 @@ ImageSchema.virtual('thumbnail').get(function () {
 });
 
 const UserSchema = new Schema({
-    name: String,
-    loginid: String,
-    passwd: String,
-    nickname: String,
+    name: {
+        type: String,
+        required: true,
+    },
+    loginid: {
+        type: String,
+        required: true,
+        unique: true
+    },
+    //password: String,
+    nickname: {
+        type: String,
+        required: true,
+        unique: true
+    },
     image: [ImageSchema],
     goal: [{ text: String }],
     crews: [{
@@ -23,5 +35,11 @@ const UserSchema = new Schema({
     }]
 
 });
+
+UserSchema.plugin(passportLocalMongoose, {
+    usernameField: 'loginid'
+});
+
+
 
 module.exports = mongoose.model('User', UserSchema);

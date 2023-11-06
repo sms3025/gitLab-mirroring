@@ -7,6 +7,7 @@ const Crew = require('../models/crew');
 const Notion = require('../models/notion');
 const Rank = require('../models/rank');
 const ExpressError = require('../utils/ExpressError');
+const { isLoggedIn } = require('../middleware');
 
 router.route('/')
     .post(catchAsync(async (req, res) => {
@@ -23,8 +24,8 @@ router.route('/')
     }))
 
 router.route('/new')
-    .get(catchAsync(async (req, res) => {
-        res.status(200);
+    .get(isLoggedIn, catchAsync(async (req, res) => {
+        res.status(200).send("newPage!");
     }))
 
 router.route('/:id')
