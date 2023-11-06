@@ -9,6 +9,7 @@ const User = require('../models/user')
 router.route('/')
     .post(catchAsync(async (req, res) => {
         //create new diary
+        
         const diary = new Diary(req.body);
         await diary.save();
 
@@ -16,7 +17,7 @@ router.route('/')
     }))
 
 router.route('/new')
-    .get(catchAsync(async (req, res,) => {
+    .get(catchAsync(async (req, res) => {
         // render new diary form
         const userId = req.body._id
         const user = await User.findById(userId).populate('crews')

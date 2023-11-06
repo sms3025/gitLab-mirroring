@@ -12,14 +12,18 @@ router.route('/')
     .post(catchAsync(async (req, res) => {
         //crew 생성요청 처리
         const userId = req.body._id;
-        const crew = new Crew(req.body);
-        await crew.save();
+        const {crewname, exercise, cycle, description} = req.body;
+        
+
+
+        // const crew = new Crew(req.body);
+        // await crew.save();
 
         res.status(201);
     }))
 
 router.route('/new')
-    .get(catchAsync(async (res, req) => {
+    .get(catchAsync(async (req, res) => {
         res.status(200);
     }))
 
@@ -103,7 +107,7 @@ router.route('/:id/notion/:notionId/comments')
     .delete()
 
 router.route('/:id/user/:userId')
-    .post(catchAsync(async (res, req) => {
+    .post(catchAsync(async (req, res) => {
 
     }))
 

@@ -17,10 +17,13 @@ const CrewSchema = new Schema({
         ref: 'User'
     },
     image: [ImageSchema],
+    exercise: String,
+    cycle: String,
     users: [{
         type: Schema.Types.ObjectId,
         ref: 'User', 
-    }]
+    }],
+    description: String
 });
 
 module.exports = mongoose.model('Crew', CrewSchema);

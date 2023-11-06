@@ -4,13 +4,15 @@ const catchAsync = require('../utils/catchAsync');
 
 router.route('/register')
     .get()
-    .post(catchAsync(async (res, req) => {
+    .post(catchAsync(async (req, res) => {
 
     }))
 
 router.route('/login')
-    .get()
-    .post(catchAsync(async (res, req) => {
+    .get((req, res) => {
+        res.send("this is login page!");
+    })
+    .post(catchAsync(async (req, res) => {
 
     }))
 

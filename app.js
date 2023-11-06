@@ -2,14 +2,14 @@ const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path')
 const app = express();
-const session = express('express-session');
+const session = require('express-session');
 const ExpressError = require('./utils/ExpressError');
 const exp = require('constants');
-
 const dbUrl = 'mongodb://127.0.0.1:27017/health-crew';
 
 const userRoutes = require('./routes/users');
 const diaryRoutes = require('./routes/diaries');
+const exploreRoutes = require('./routes/explores')
 const crewRoutes = require('./routes/crews');
 
 mongoose.connect(dbUrl)
@@ -21,14 +21,14 @@ mongoose.connect(dbUrl)
         console.log(err);
     })
 
-app.use('/', userRoutes)
+app.use('/', userRoutes);
+app.use('/explore', exploreRoutes);
 app.use('/diary', diaryRoutes);
 app.use('/crew', crewRoutes);
-app.use('/explore')
 
 
 app.get('/', (req, res) => {
-    res.render('home');
+    res.send('home');
 })
 
 app.all('*', (req, res, next) => {
