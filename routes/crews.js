@@ -13,12 +13,18 @@ router.route('/')
     .post(catchAsync(async (req, res) => {
         //crew 생성요청 처리
         const userId = req.body._id;
-        const {crewname, exercise, cycle, description} = req.body;
-        
+        const { crewname, exercise, cycle, description } = req.body;
 
 
-        // const crew = new Crew(req.body);
-        // await crew.save();
+        const crew = new Crew({
+            crewname: crewname,
+            exercise: exercise,
+            cycle: cycle,
+            description: description,
+            manager: userId,
+            users: [userId]
+        });
+        await crew.save();
 
         res.status(201);
     }))
