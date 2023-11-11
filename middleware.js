@@ -1,9 +1,11 @@
+const User = require('./models/user');
+const Crew = require('./models/crew');
 
 
 module.exports.isLoggedIn = (req, res, next) => {
     if (!req.isAuthenticated()) {
         req.flash('error', 'You must be signed in first!');
-        return res.status(400);
+        return res.status(400).send("You have to login before access");
     }
     next();
 }

@@ -10,7 +10,7 @@ const ExpressError = require('../utils/ExpressError');
 const { isLoggedIn } = require('../middleware');
 
 router.route('/')
-    .post(catchAsync(async (req, res) => {
+    .post(isLoggedIn, catchAsync(async (req, res) => {
         //crew 생성요청 처리
         const userId = req.body._id;
         const { crewname, exercise, cycle, description } = req.body;
@@ -113,7 +113,7 @@ router.route('/:id/notion/:notionId/comments')
     .post()
     .delete()
 
-router.route('/:id/user/:userId')
+router.route('/:id/user/')
     .post(catchAsync(async (req, res) => {
 
     }))
