@@ -11,17 +11,21 @@ ImageSchema.virtual('thumbnail').get(function () {
 });
 
 const CrewSchema = new Schema({
-    crewname: String,
+    crewname: {
+        type: String,
+        required: true
+    },
     manager: {
         type: Schema.Types.ObjectId,
-        ref: 'User'
+        ref: 'User',
+        required: true
     },
     image: [ImageSchema],
     exercise: String,
     cycle: String,
     users: [{
         type: Schema.Types.ObjectId,
-        ref: 'User', 
+        ref: 'User',
     }],
     description: String
 });
