@@ -3,6 +3,8 @@ const router = express.Router();
 const catchAsync = require('../utils/catchAsync');
 const User = require('../models/user');
 const passport = require('passport');
+const { isLoggedIn } = require('../middleware');
+const ExpressError = require('../utils/ExpressError');
 
 router.route('/register')
     .get((req, res) => {
@@ -44,5 +46,25 @@ router.route('/logout')
         });
         res.status(200).send("logout success");
     }))
+
+router.route('/changepassword')
+    .get()
+    .post(isLoggedIn, catchAsync(async (req, res) => {
+        const { oldPassword, password, password2 } = req.body;
+        if (password !== password2) {
+            res.status(400).send("password errer");
+            throw new ExpressError("PASSWORD ERROR");
+        } else {
+            const user = await User.findById(req.user._id);
+            await user.changePassword(oldPassword, password);
+            res.status(200).send("change password!!");
+        }
+    }))
+
+router.route('/setpassword')
+    .get()
+    .post((req, res) => {
+
+    })
 
 module.exports = router;
