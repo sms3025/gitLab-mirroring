@@ -20,8 +20,10 @@ const User = require('./models/user');
 
 const userRoutes = require('./routes/users');
 const diaryRoutes = require('./routes/diaries');
-const exploreRoutes = require('./routes/explores')
+const exploreRoutes = require('./routes/explores');
 const crewRoutes = require('./routes/crews');
+const notionRoutes = require('./routes/notions');
+const rankingRoutes = require('./routes/rankings');
 
 
 const secret = process.env.SECRET || 'thisshouldbeabettersecret!';
@@ -54,6 +56,7 @@ app.use(flash()); // flash 사용
 app.use(passport.session());
 app.use(express.urlencoded({ extended: true }));
 app.use(passport.initialize());
+app.use(express.json());
 passport.use(new LocalStrategy(User.authenticate()));
 
 passport.serializeUser(User.serializeUser());
@@ -78,7 +81,10 @@ app.use((req, res, next) => {
 app.use('/', userRoutes)
 app.use('/diary', diaryRoutes);
 app.use('/crew', crewRoutes);
-//app.use('/explore')
+app.use('/crew/:crewId/notion', notionRoutes);
+app.use('/crew/:crewId/ranking', rankingRoutes);
+app.use('/explore',exploreRoutes);
+
 
 
 app.get('/', (req, res) => {

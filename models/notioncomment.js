@@ -10,7 +10,7 @@ ImageSchema.virtual('thumbnail').get(function () {
     return this.url.replace('/upload', '/upload/w_200');
 });
 
-const NotionCommentSchma = new Schema({
+const NotionCommentSchema = new Schema({
     post: {
         type: Schema.Types.ObjectId,
         ref: 'Notion'
@@ -22,8 +22,9 @@ const NotionCommentSchma = new Schema({
     text: String,
     uploadtime: {
         type: Date,
+        default: Date.now,
         index: 1
     }
 });
 
-module.exports = mongoose.model('NotionComment', NotionCommentSchma);
+module.exports = mongoose.model('NotionComment', NotionCommentSchema);

@@ -1,10 +1,10 @@
 const express = require('express');
-const router = express.Router();
 const catchAsync = require('../utils/catchAsync');
-const explores = require('../controllers/explores')
+const router = express.Router();
+const ranking = require('../controllers/ranking')
 
 
 router.route('/')
-    .get(catchAsync(explores.showExplores));
+    .get(catchAsync(ranking.showRanking));
 
 module.exports = router;

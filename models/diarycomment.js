@@ -13,6 +13,7 @@ const DiaryCommentSchema = new Schema({
     text: String,
     uploadtime: {
         type: Date,
+        dafault: Date.now,
         index: 1
     }
 });

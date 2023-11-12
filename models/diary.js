@@ -1,14 +1,8 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const ImageSchema = new Schema({
-    url: String,
-    filename: String
-});
 
-ImageSchema.virtual('thumbnail').get(function () {
-    return this.url.replace('/upload', '/upload/w_200');
-});
+
 
 const DiarySchema = new Schema({
     author: {
@@ -19,18 +13,25 @@ const DiarySchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'Crew'
     },
-    crewimage: [ImageSchema],
+    image: {
+        url: String,
+        filename: String
+    },
     type: String,
     startdate: Date,
     time: Number,
     memo: String,
-    like: Number,
+    like: {
+        type: Number,
+        default: 0
+    },
     comments: [{
         type: Schema.Types.ObjectId,
         ref: 'DiaryComment'
     }],
     uploadtime: {
         type: Date,
+        default: Date.now,
         index: -1
     }
 });

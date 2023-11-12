@@ -2,14 +2,6 @@ const mongoose = require('mongoose');
 const passportLocalMongoose = require('passport-local-mongoose');
 const Schema = mongoose.Schema;
 
-const ImageSchema = new Schema({
-    url: String,
-    filename: String
-});
-
-ImageSchema.virtual('thumbnail').get(function () {
-    return this.url.replace('/upload', '/upload/w_200');
-});
 
 const UserSchema = new Schema({
     name: {
@@ -27,7 +19,10 @@ const UserSchema = new Schema({
         required: true,
         unique: true
     },
-    image: [ImageSchema],
+    image: {
+        url: String,
+        filename: String
+    },
     goal: [{ text: String }],
     crews: [{
         type: Schema.Types.ObjectId,
