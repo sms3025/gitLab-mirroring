@@ -17,6 +17,8 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local');
 const dbUrl = 'mongodb://127.0.0.1:27017/health-crew';
 const User = require('./models/user');
+const mongoSanitize = require('express-mongo-sanitize');
+const helmet = require('helmet');
 
 const userRoutes = require('./routes/users');
 const diaryRoutes = require('./routes/diaries');
@@ -31,7 +33,7 @@ const store = MongoStore.create({
     mongoUrl: dbUrl,
     touchAfter: 24 * 60 * 60,
     crypto: {
-        secret: 'thisshouldbeabettersecret!'
+        secret: process.env.SECRET
     }
 })
 
@@ -52,6 +54,12 @@ const sessionConfig = { //세션 정보 추가
 
 app.use(session(sessionConfig)); //이러한 정보를 가진 세션 사용(미들웨어를 쓰는것 만으로 자동으로 session정보에 접근할 수 있는 cookie를 보낸다.)
 app.use(flash()); // flash 사용
+app.use(mongoSanitize());
+app.use(helmet({
+    contentSecurityPolicy: false,
+    crossOriginResourcePolicy: false,
+    crossOriginOpenerPolicy: false
+}));
 
 app.use(passport.session());
 app.use(express.urlencoded({ extended: true }));
