@@ -20,10 +20,18 @@ const CrewSchema = new Schema({
     },
     exercise: String,
     cycle: String,
-    users: [{
-        type: Schema.Types.ObjectId,
-        ref: 'User',
-    }],
+    users: [
+        {
+            user: {
+                type: Schema.Types.ObjectId,
+                ref: 'User',
+            },
+            count: {
+                type: Number,
+                default: 0
+            }
+        }
+    ],
     description: String
 });
 
