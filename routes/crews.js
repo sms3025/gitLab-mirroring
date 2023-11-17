@@ -4,6 +4,15 @@ const router = express.Router();
 const crews = require('../controllers/crews')
 const { isLoggedIn } = require('../middleware');
 const { upload } = require('../aws/index');
+
+/**
+ * @swagger
+ * /crew:
+ *  post:
+ *      tags: [crew]
+ *      summary: 새 크루 만들기
+ *                  
+ */
 router.route('/')
     .post(isLoggedIn, upload.single('filename'), catchAsync(crews.createCrew))
 
@@ -15,11 +24,6 @@ router.route('/')
  *      - crew
  *      description:
  *      - application/json
- *      
- *          
- *          
- *              
- *                  
  */
 router.route('/new')
     .get(isLoggedIn, catchAsync(async (req, res) => {

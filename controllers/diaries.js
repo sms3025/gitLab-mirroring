@@ -19,13 +19,13 @@ module.exports.newDiaryForm = async (req, res) => {
 module.exports.createDiary = async (req, res) => {
     //create new diary
     const userId = req.user._id;
-    const { crewId, type, startdate, time, memo } = req.body;
+    const { crewId, type, time, memo } = req.body;
     const diary = new Diary({
         author: userId,
         crew: crewId,
         image: { filename: req.file.key, url: req.file.location },
         type: type,
-        startdate: startdate,
+        time: time,
         memo: memo
     });
 
