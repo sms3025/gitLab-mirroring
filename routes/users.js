@@ -1,70 +1,34 @@
 const express = require('express');
 const router = express.Router();
 const catchAsync = require('../utils/catchAsync');
-const User = require('../models/user');
 const passport = require('passport');
 const { isLoggedIn } = require('../middleware');
-const ExpressError = require('../utils/ExpressError');
+const users = require('../controllers/users');
 
 router.route('/register')
-    .get((req, res) => {
-        res.status(200).send("register");
-    })
-    .post(catchAsync(async (req, res, next) => {
-        try {
-            const { name, loginid, password, nickname } = req.body;
-            //console.log(req.body);
-            const user = new User({ name, loginid, nickname })
-            const newUser = await User.register(user, password);
-            // req.login(newUser, err => {
-            //     if (err) return next(err);
-            //     res.status(200);
-            // })
-            res.status(200).send("register OK");
-        } catch (e) {
-            res.status(400).send(e);
-        }
-    }))
+    .get(users.showRegister)
+    .post(catchAsync(users.createRegister))
+    .delete(isLoggedIn, catchAsync(users.deleteRegister))
 
 router.route('/login')
-    .get((req, res) => {
-        res.status(200).send("login");
-    })
-    .post(passport.authenticate('local', { failureFlash: true }), catchAsync(async (req, res) => {
-        res.status(200).send("login success");
-    }))
+    .get(users.showLogin)
+    .post(passport.authenticate('local', { failureFlash: true }), users.createLogin)
 
 router.route('/logout')
-    .get((req, res) => {
-        res.status(200).send("logout success");
-    })
-    .post(catchAsync((req, res, next) => {
-        req.logout(err => {
-            if (err) {
-                return next(err);
-            }
-        });
-        res.status(200).send("logout success");
-    }))
+    .get(users.showLogout)
+    .post(isLoggedIn, catchAsync(users.createLogout))
 
 router.route('/changepassword')
-    .get()
-    .post(isLoggedIn, catchAsync(async (req, res) => {
-        const { oldPassword, password, password2 } = req.body;
-        if (password !== password2) {
-            res.status(400).send("password errer");
-            throw new ExpressError("PASSWORD ERROR");
-        } else {
-            const user = await User.findById(req.user._id);
-            await user.changePassword(oldPassword, password);
-            res.status(200).send("change password!!");
-        }
-    }))
+    .get(users.showChangePassword)
+    .put(isLoggedIn, catchAsync(users.changePassword))
 
-router.route('/setpassword')
-    .get()
-    .post((req, res) => {
+router.route('/findpassword')
+    .get(users.showFindPassword)
+    .post(catchAsync(users.findPassword))
 
-    })
+router.route('/mypage')
+    .get(isLoggedIn, catchAsync(users, users.showMyPage))
+    .delete(isLoggedIn, catchAsync(users.deleteMyPage))
+    .put(isLoggedIn, catchAsync(users.addMyPage))
 
 module.exports = router;

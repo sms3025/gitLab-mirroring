@@ -18,7 +18,7 @@ const LocalStrategy = require('passport-local');
 const dbUrl = 'mongodb://127.0.0.1:27017/health-crew';
 const User = require('./models/user');
 const mongoSanitize = require('express-mongo-sanitize');
-const helmet = require('helmet');
+//const helmet = require('helmet');
 
 const userRoutes = require('./routes/users');
 const diaryRoutes = require('./routes/diaries');
@@ -55,11 +55,11 @@ const sessionConfig = { //세션 정보 추가
 app.use(session(sessionConfig)); //이러한 정보를 가진 세션 사용(미들웨어를 쓰는것 만으로 자동으로 session정보에 접근할 수 있는 cookie를 보낸다.)
 app.use(flash()); // flash 사용
 app.use(mongoSanitize());
-app.use(helmet({
-    contentSecurityPolicy: false,
-    crossOriginResourcePolicy: false,
-    crossOriginOpenerPolicy: false
-}));
+// app.use(helmet({
+//     contentSecurityPolicy: false,
+//     crossOriginResourcePolicy: false,
+//     crossOriginOpenerPolicy: false
+// }));
 
 app.use(passport.session());
 app.use(express.urlencoded({ extended: true }));
@@ -91,7 +91,7 @@ app.use('/diary', diaryRoutes);
 app.use('/crew', crewRoutes);
 app.use('/crew/:crewId/notion', notionRoutes);
 app.use('/crew/:crewId/ranking', rankingRoutes);
-app.use('/explore',exploreRoutes);
+app.use('/explore', exploreRoutes);
 
 
 
@@ -106,7 +106,7 @@ app.all('*', (req, res, next) => {
 app.use((err, req, res, next) => {
     const { statusCode = 500 } = err;
     if (!err.message) err.message = 'Oh No, Something Went Wrong!'
-    res.status(statusCode).render('error', { err })
+    res.status(statusCode).send(err);
 })
 
 app.listen(3000, () => {
