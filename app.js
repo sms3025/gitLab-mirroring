@@ -19,6 +19,10 @@ const dbUrl = 'mongodb://127.0.0.1:27017/health-crew';
 const User = require('./models/user');
 const mongoSanitize = require('express-mongo-sanitize');
 //const helmet = require('helmet');
+const cron = require('node-cron');
+
+const { swaggerUi, specs } = require('./modules/swagger');
+const { updateRanking } = require('./controllers/ranking');
 
 const userRoutes = require('./routes/users');
 const diaryRoutes = require('./routes/diaries');
@@ -26,6 +30,7 @@ const exploreRoutes = require('./routes/explores');
 const crewRoutes = require('./routes/crews');
 const notionRoutes = require('./routes/notions');
 const rankingRoutes = require('./routes/rankings');
+const homepageRoutes = require('./routes/homepage');
 
 
 const secret = process.env.SECRET || 'thisshouldbeabettersecret!';
@@ -85,8 +90,10 @@ app.use((req, res, next) => {
     res.locals.error = req.flash('error');
     next();
 })
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 
-app.use('/', userRoutes)
+app.use('/', userRoutes);
+app.use('/home', homepageRoutes);
 app.use('/diary', diaryRoutes);
 app.use('/crew', crewRoutes);
 app.use('/crew/:crewId/notion', notionRoutes);
@@ -94,6 +101,8 @@ app.use('/crew/:crewId/ranking', rankingRoutes);
 app.use('/explore', exploreRoutes);
 
 
+// 매월 0시에 실행
+// cron.schedule('0 0 1 * *', updateRanking);
 
 app.get('/', (req, res) => {
     res.send('home');

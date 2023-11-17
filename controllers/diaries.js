@@ -18,9 +18,25 @@ module.exports.newDiaryForm = async (req, res) => {
 
 module.exports.createDiary = async (req, res) => {
     //create new diary
+    const userId = req.user._id;
+    const { crewId, type, time, memo } = req.body;
+    const diary = new Diary({
+        author: userId,
+        crew: crewId,
+        image: { filename: req.file.key, url: req.file.location },
+        type: type,
+        time: time,
+        memo: memo
+    });
 
-    const diary = new Diary(req.body);
-    diary.image = { filename: req.file.key, url: req.file.location }
+    const foundCrew = await Crew.findById(crewId);
+    foundCrew.users.forEach(obj => {
+        if (obj.user === userId) {
+            obj.count += 1;
+        }
+    })
+
+    await foundCrew.save()
     await diary.save();
 
     res.status(201).json('success!');
@@ -41,7 +57,7 @@ module.exports.deleteDiary = async (req, res) => {
     deleteComments.forEach(async id => {
         const result = await DiaryComment.deleteOne({ _id: id });
         if (!result) {
-            throw new Error('해당 id의 todo list가 없습니다.')
+            throw new ExpressError('no diary comments', 400);
         }
     })
 
