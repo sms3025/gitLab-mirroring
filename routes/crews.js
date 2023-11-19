@@ -4,6 +4,38 @@ const router = express.Router();
 const crews = require('../controllers/crews')
 const { isLoggedIn } = require('../middleware');
 const { upload } = require('../aws/index');
+
+/**
+ * @swagger
+ * /crew:
+ *  post:
+ *      tags: [crew]
+ *      summary: 새 크루 만들기
+ *      requestBody:
+ *          content:
+ *              multipart/form-data:
+ *                  schema:
+ *                      type: object
+ *                      properties:
+ *                          crewname:
+ *                              type: string
+ *                              description: 크루 이름
+ *                          exercise:
+ *                              type: string
+ *                              description: 크루 운동
+ *                          cycle:
+ *                              type: string
+ *                              description: 크루 운동 주기
+ *                          description:
+ *                              type: string
+ *                              description: 크루 소개
+ *                          image:
+ *                              type: binary
+ *                 
+ *      responses:
+ *          "200": 
+ *              description: OK                  
+ */
 router.route('/')
     .post(isLoggedIn, upload.single('filename'), catchAsync(crews.createCrew))
 
@@ -28,40 +60,67 @@ router.route('/new')
 
 /**
  * @swagger
- * /crew/:crewId:
+ * /crew/{crewId}:
+ *  parameters:
+ *  - name: crewId
+ *    in: path
+ *    required: true
+ *    description: 크루 id
+ *    schema:
+ *      type: string 
  *  get:
  *      tags: [crew]
  *
  *      summary: showcrew
  *      description: showCrew
  *
- * delete:
- *      tags: [crew]
- *      summary: delete Crew
- *      description: 해당 크루 삭제
+ *
+ *      responses:
+ *          '200':
+ *              description: OK
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          type: object
+ *                          properties:
+ *                              diary:
+ *                                  type: array
+ *                                  items:
+ *                                      $ref: '#/components/schemas/Diary'
+ *                              notion:
+ *                                  type: array
+ *                                  items:
+ *                                      $ref: '#/components/schemas/Notion'
+ *                                      
+ *                                      
+ * 
+ * 
  */
 router.route('/:crewId')
     .get(catchAsync(crews.showCrew))
     .delete(catchAsync(crews.deleteCrew))
 
-/**
- * @swagger
- * /crew/:crewId/diary:
- *  get:
- *      tags: [crew]
- *      summary: 해당 크루에 운동기록 보여주기
- */
-router.route('/:crewId/diary')
-    .get(catchAsync())
 
 
 /**
  * @swagger
- * /crew/:crewId/user:
+ * /crew/{crewId}/user:
+ *  parameters:
+ *  - name: crewId
+ *    in: path
+ *    required: true
+ *    description: 크루 id
+ *    schema:
+ *      type: string 
  *  post:
  *      tags: [crew]
  *      summary: 해당 크루에 사용자 추가하기
  *
+ *      
+ *      responses:
+ *          '200':
+ *              description: OK
+ * 
  *  delete:
  *      tags: [crew]
  *      summary: 해당 크루에서 해당 사용자 삭제하기

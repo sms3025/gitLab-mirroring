@@ -34,6 +34,7 @@ const exploreRoutes = require('./routes/explores');
 const crewRoutes = require('./routes/crews');
 const notionRoutes = require('./routes/notions');
 const rankingRoutes = require('./routes/rankings');
+const homepageRoutes = require('./routes/homepage');
 
 
 const secret = process.env.SECRET || 'thisshouldbeabettersecret!';
@@ -95,7 +96,8 @@ app.use((req, res, next) => {
 })
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 
-app.use('/', userRoutes)
+app.use('/', userRoutes);
+app.use('/home', homepageRoutes);
 app.use('/diary', diaryRoutes);
 app.use('/crew', crewRoutes);
 app.use('/crew/:crewId/notion', notionRoutes);
