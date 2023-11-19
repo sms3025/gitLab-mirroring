@@ -93,7 +93,7 @@ app.use((req, res, next) => {
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 
 app.use('/', userRoutes);
-app.use('/home', homepageRoutes);
+app.use('/homepage', homepageRoutes);
 app.use('/diary', diaryRoutes);
 app.use('/crew', crewRoutes);
 app.use('/crew/:crewId/notion', notionRoutes);
