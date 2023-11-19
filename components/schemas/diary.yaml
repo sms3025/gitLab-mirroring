@@ -1,0 +1,41 @@
+components:
+  schemas:
+    Diary:
+      type: object
+      properties:
+        id:
+          type: number
+          description: 게시글 id
+        author:
+          $ref: '#/components/schemas/User'
+        crew:
+          $ref: '#/components/schemas/Crew'
+        image:
+          type: object
+          properties:
+            url:
+              type: string
+              description: 이미지가 저장된 url
+            filename: 
+              type: string
+              description: 이미지 파일 이름
+        type: 
+          type: string
+          description: 운동 종류 
+        time: 
+          type: number
+          description: 운동한 시간
+        memo: 
+          type: string
+          description: 운동한 내용 메모
+        like:
+          type: number
+        comments:
+          type: array
+          items: 
+            $ref: '#/components/schemas/DiaryComment'
+          description: 운동기록 댓글 리스트
+        uploadtime:
+          type: string
+          description: date 타입
+        

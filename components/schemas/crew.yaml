@@ -1,0 +1,39 @@
+components:
+ schemas:
+  Crew:
+    type: object
+    properties:
+      crewname:
+        type: string
+      manager:
+        $ref: '#/components/schemas/User'
+      image:
+        type: object
+        properties:
+          url:
+            type: string
+            description: 이미지가 저장된 url
+          filename: 
+            type: string
+            description: 이미지 파일 이름
+        description: 크루 대표 이미지
+      exercise:
+        type: string
+        description: 크루 운동
+      cycle:
+        type: string
+        description: 크루 운동 주기
+      users:
+        type: array
+        items:
+          type: object
+          properties:
+            user:
+              $ref: '#/components/schemas/User'
+            count:
+              type: number
+              description: 유저 운동 횟수
+      description:
+        type: string
+        description: 크루 소개 내용
+        

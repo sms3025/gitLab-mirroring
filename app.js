@@ -24,6 +24,9 @@ const mongoSanitize = require('express-mongo-sanitize');
 
 //const cron = require('node-cron');
 
+
+
+
 const { swaggerUi, specs } = require('./modules/swagger');
 const { updateRanking } = require('./controllers/ranking');
 
@@ -64,11 +67,13 @@ const sessionConfig = { //세션 정보 추가
 app.use(session(sessionConfig)); //이러한 정보를 가진 세션 사용(미들웨어를 쓰는것 만으로 자동으로 session정보에 접근할 수 있는 cookie를 보낸다.)
 app.use(flash()); // flash 사용
 app.use(mongoSanitize());
+
 //app.use(helmet({
 //    contentSecurityPolicy: false,
 //    crossOriginResourcePolicy: false,
 //    crossOriginOpenerPolicy: false
 //}));
+
 
 app.use(passport.session());
 app.use(express.urlencoded({ extended: true }));
@@ -104,6 +109,7 @@ app.use('/crew/:crewId/notion', notionRoutes);
 app.use('/crew/:crewId/ranking', rankingRoutes);
 app.use('/explore', exploreRoutes);
 
+
 // 매월 0시에 실행
 // cron.schedule('0 0 1 * *', updateRanking);
 
@@ -118,7 +124,7 @@ app.all('*', (req, res, next) => {
 app.use((err, req, res, next) => {
     const { statusCode = 500 } = err;
     if (!err.message) err.message = 'Oh No, Something Went Wrong!'
-    res.status(statusCode).render('error', { err })
+    res.status(statusCode).send(err);
 })
 
 app.listen(3000, () => {

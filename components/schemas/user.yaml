@@ -1,0 +1,35 @@
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        name:
+          type: string
+          description: 유저 이름
+        loginid:
+          type: string
+          description: 유저 아이디
+        email:
+          type: string
+          description: 유저 이메일(비밀번호 초기화 메세지가 이 메일로 감)
+        nickname:
+          type: string
+          description: 유저 닉네임
+        image:
+          type: object
+          properties:
+            url: 
+              type: string
+              description: image url
+            filename: 
+              type: string
+              description: file 이름
+        goal:
+          type: array
+          items:
+            type: string
+            description: 오늘의 목표
+        crews:
+          type: array
+          items:
+            $ref: '#/components/schemas/Crew'

@@ -1,0 +1,15 @@
+components:
+  schemas:
+    NotionComment:
+      type: object
+      properties:
+        post:
+          $ref: '#/components/schemas/Notion'
+        author:
+          $ref: '#/components/schemas/User'
+        text:
+          type: string
+          description: 댓글 내용
+        uploadtime:
+          type: number
+          description: date 타입
