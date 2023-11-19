@@ -11,6 +11,32 @@ const { upload } = require('../aws/index');
  *  post:
  *      tags: [diary]
  *      summary: 운동기록 추가하기
+ * 
+ *      requestBody:
+ *          content: 
+ *              multipart/form-data:
+ *                  schema:
+ *                      type: object
+ *                      properties:
+ *                          crewId:
+ *                              type: number
+ *                              description: 운동기록 올릴 크루 id
+ *                          type:
+ *                              type: string
+ *                              description: 운동 종류
+ *                          time: 
+ *                              type: number
+ *                              description: 운동 한 시간
+ *                          memo:
+ *                              type: string
+ *                              description: 운동 기록 메모
+ *                          image:
+ *                              type: binary
+ *                              description: 운동 기록 이미지
+ *      responses:
+ *          '200':
+ *              description: OK
+ * 
  */
 router.route('/')
     .post(upload.single('filename'), catchAsync(diaries.createDiary))
@@ -21,6 +47,17 @@ router.route('/')
  *  get:
  *      tags: [diary]
  *      summary: 새로운 운동기록 추가 폼
+ * 
+ *      responses:
+ *          '200':
+ *              description: OK
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          type: array
+ *                          items:
+ *                              $ref: '#/components/schemas/Crew'
+ *                              
  */
 router.route('/new')
     .get(catchAsync(diaries.newDiaryForm))
@@ -37,10 +74,31 @@ router.route('/:diaryId')
 
 /**
  * @swagger
- * /diary/:diaryId/comments:
+ * /diary/{diaryId}/comments:
+ *  parameters:
+ *  - name: diaryId
+ *    in: path
+ *    required: true
+ *    description: 운동기록 id
+ *    schema:
+ *      type: string 
+ * 
  *  post: 
  *      tags: [diary]
  *      summary: 해당 운동기록에 댓글 추가하기
+ *      
+ *      requestBody:
+ *          content: 
+ *              application/x-www-form-urlencoded:
+ *                  schema:
+ *                      type: object
+ *                      properties:
+ *                          text:
+ *                              type: string
+ *                              description: 댓글 내용
+ *      responses:
+ *          '200':
+ *              description: OK
  * 
  */
 router.route('/:diaryId/comments')
@@ -48,7 +106,9 @@ router.route('/:diaryId/comments')
 
 /**
  * @swagger
- * /diary/:diaryId/comments/:commentsId:
+ * /diary/{diaryId}/comments/{commentId}:
+ *  
+ * 
  *  delete:
  *      tags: [diary]
  *      summary: 해당 운동기록에 해당 댓글 삭제하기

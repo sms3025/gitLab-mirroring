@@ -9,7 +9,7 @@ module.exports.showRanking = async (req, res) => {
         .populate('users.user')
         .sort({ 'users.count': -1, 'users.user.nickname': 1 });
     const ranking = foundCrew.users;
-    
+
     res.status(200).send(ranking);
 }
 

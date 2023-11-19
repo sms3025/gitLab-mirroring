@@ -9,7 +9,18 @@ const explores = require('../controllers/explores')
  * /explores:
  *  get:
  *      tags: [explores]
- *      summary: 크루 목록 보여주기
+ *      summary: 모든 크루 목록 보여주기
+ * 
+ *      responses:
+ *          '200':
+ *              description: OK
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          type: array
+ *                          items:
+ *                              $ref: '#/components/schemas/Crew'
+ *              
  */
 router.route('/')
     .get(catchAsync(explores.showExplores));
