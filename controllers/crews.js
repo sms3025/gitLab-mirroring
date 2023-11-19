@@ -1,9 +1,12 @@
 const Diary = require('../models/diary');
+const DiaryComment = require('../models/diarycomment');
 const User = require('../models/user');
 const Crew = require('../models/crew');
 const Notion = require('../models/notion');
+const NotionComment = require('../models/notioncomment');
 const ExpressError = require('../utils/ExpressError');
 const { deleteImage } = require('../aws/index');
+
 
 module.exports.createCrew = async (req, res) => {
     //crew 생성요청 처리
@@ -61,7 +64,7 @@ module.exports.showCrew = async (req, res) => {
     if (!notions) {
         throw new ExpressError("there is no notion", 400);
     }
-    
+
     const result = {
         diaries: diaries,
         notions: notions
@@ -70,11 +73,35 @@ module.exports.showCrew = async (req, res) => {
 }
 
 module.exports.deleteCrew = async (req, res) => {
+    // 크루 이미지, 올린 운동기록, 올린 왁자지껄 각 댓글들
     const crewId = req.params.id;
-    const crew = await Crew.findById(crewId);
+    const foundCrew = await Crew.findById(crewId);
+
     await User.updateMany({}, { $pullAll: { crews: [crewId] } });
 
-    const filename = crew.image.filename;
+    const foundNotion = await Notion.find({ crew: crewId });
+    foundNotion.forEach(async notion => {
+        if (notion.image) {
+            deleteImage(notion.image.filename);
+        }
+        if (notion.comments.length !== 0) {
+            await NotionComment.deleteMany({ post: notion._id });
+        }
+    })
+    await Notion.deleteMany({ crew: crewId });
+
+    const foundDiary = await Diary.find({ crew: crewId });
+    foundDiary.forEach(async diary => {
+        if (diary.image) {
+            deleteImage(diary.image.filename);
+        }
+        if (diary.comments.legth !== 0) {
+            await DiaryComment.deleteMany({ post: diary._id });
+        }
+    })
+    await Diary.deleteMany({ crew: crewId });
+
+    const filename = foundCrew.image.filename;
     deleteImage(filename);
 
     await Crew.findByIdAndDelete(crewId);
@@ -96,4 +123,41 @@ module.exports.addNewMember = async (req, res) => {
     await foundUser.save();
 
     res.status(200).json('success');
+}
+
+module.exports.deleteCrewMember = async (req, res) => {
+    // 나가는 멤버가 작성한 운동기록, 게시글, 댓글 삭제, 사용자의 크루 목록에서 크루 삭제, 크루 유저에서 해당 유저 삭제 
+    const userId = req.user._id;
+    const crewId = req.params.crewId;
+
+    await Crew.findByIdAndUpdate(crewId, { $pullAll: { users: [userId] } });
+    await User.findByIdAndUpdate(userId, { $pullAll: { crews: [crewId] } });
+
+    const foundNotion = await Notion.find({author: userId, crew: crewId});
+
+    foundNotion.forEach(async notion => {
+        if (notion.image) {
+            deleteImage(notion.image.filename);
+        }
+        if (notion.comments.length !== 0) {
+            await NotionComment.deleteMany({ post: notion._id });
+            await Notion.deleteOne({ _id: notion._id });
+        }
+    })
+
+    const foundDiary = await Diary.find({author: userId, crew: crewId});
+
+    foundDiary.forEach(async diary => {
+        if (diary.image) {
+            deleteImage(diary.image.filename);
+        }
+        if (diary.comments.legth !== 0) {
+            await DiaryComment.deleteMany({ post: diary._id });
+            await Diary.deleteOne({ _id: diary._id });
+        }
+    })
+
+
+    res.status(200).json('success');
+
 }
