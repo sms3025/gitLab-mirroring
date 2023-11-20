@@ -58,11 +58,6 @@ module.exports.createLogout = (req, res, next) => {
             return next(err);
         }
     });
-    req.logout(err => {
-        if (err) {
-            return next(err);
-        }
-    });
     res.status(200).send("logout success");
 }
 

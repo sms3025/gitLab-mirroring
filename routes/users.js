@@ -86,7 +86,7 @@ router.route('/login')
  */
 
 router.route('/logout')
-    .post(isLoggedIn, catchAsync(users.createLogout))
+    .post(isLoggedIn, users.createLogout)
 /**
  * @swagger
  * /changepassword:
