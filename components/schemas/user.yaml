@@ -11,7 +11,7 @@ components:
           description: 유저 아이디
         email:
           type: string
-          description: 유저 이메일(비밀번호 초기화 메세지가 이 메일로 가고 Gmail만 가능함)
+          description: 유저 이메일(비밀번호 초기화 메세지가 이 메일로 감)
         nickname:
           type: string
           description: 유저 닉네임

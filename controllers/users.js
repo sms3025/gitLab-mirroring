@@ -14,10 +14,6 @@ function createRandomPassword(variable, passwordLength) {
     return randomString
 }
 
-module.exports.showRegister = (req, res) => {
-    res.status(200).send("register");
-}
-
 module.exports.createRegister = async (req, res) => {
     try {
         const { name, loginid, password, nickname, email } = req.body;
@@ -52,16 +48,8 @@ module.exports.deleteRegister = async (req, res) => {
     res.status(200).send("delete user success");
 }
 
-module.exports.showLogin = (req, res) => {
-    res.status(200).send("show login page");
-}
-
 module.exports.createLogin = (req, res) => {
     res.status(200).send("login success");
-}
-
-module.exports.showLogout = (req, res) => {
-    res.status(200).send("show logout page");
 }
 
 module.exports.createLogout = (req, res, next) => {
@@ -70,16 +58,7 @@ module.exports.createLogout = (req, res, next) => {
             return next(err);
         }
     });
-    req.logout(err => {
-        if (err) {
-            return next(err);
-        }
-    });
     res.status(200).send("logout success");
-}
-
-module.exports.showChangePassword = (req, res) => {
-    res.status(200).send("showChangePassword!");
 }
 
 module.exports.changePassword = async (req, res) => {
@@ -94,23 +73,13 @@ module.exports.changePassword = async (req, res) => {
     }
 }
 
-module.exports.showFindPassword = (req, res) => {
-    res.status(200).send("showSetPassword!");
-}
-
 module.exports.findPassword = async (req, res) => {
-    console.log(1);
     const oldloginid = req.body.loginid;
-    console.log(2);
     const user = await User.findOne({ loginid: oldloginid }).populate('crews');
-    console.log(user);
-    console.log(3);
     if (!user) {
         return res.status(400).send("Invalid userId");
     }
-    console.log(4);
     const randomPassword = createRandomPassword(variable, 8);
-    console.log(5);
     const name = user.name;
     const loginid = user.loginid;
     const email = user.email;
@@ -118,13 +87,9 @@ module.exports.findPassword = async (req, res) => {
     const image = user.image;
     const goal = user.goal;
     const crews = user.crews;
-    console.log(6);
     await User.deleteOne({ loginid: loginid });
-    console.log(7);
     const newUser = new User({ name, loginid, email, nickname, image, goal, crews });
-    console.log(8);
     await User.register(newUser, randomPassword);
-    console.log(9);
 
     const transporter = nodemailer.createTransport({
         host: "smtp.gmail.com",
@@ -135,7 +100,6 @@ module.exports.findPassword = async (req, res) => {
             pass: process.env.EMAIL_PASSWORD,
         },
     });
-    console.log(10);
     const emailOptions = { // 옵션값 설정
         from: 'Goguma@gmail.com',
         to: user.email,
@@ -144,9 +108,7 @@ module.exports.findPassword = async (req, res) => {
             "<h1 >Goguma에서 새로운 비밀번호를 알려드립니다.</h1> <h2> 비밀번호 : " + randomPassword + "</h2>"
             + '<h3 style="color: crimson;">임시 비밀번호로 로그인 하신 후, 반드시 비밀번호를 수정해 주세요.</h3>'
     };
-    console.log(11);
     transporter.sendMail(emailOptions);
-    console.log(12);
     res.status(200).send("SetPasswordSuccess");
 }
 

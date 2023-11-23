@@ -5,7 +5,7 @@ const { showHomepage, getDiaryByDate, initHomepage } = require('../controllers/h
 
 /**
  * @swagger
- * /homepage
+ * /homepage:
  *  get:
  *      tags: [homepage]
  *      summary: 홈 화면 보여주기
