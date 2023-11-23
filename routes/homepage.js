@@ -1,7 +1,7 @@
 const express = require('express');
 const catchAsync = require('../utils/catchAsync');
 const router = express.Router();
-const { showHomepage } = require('../controllers/homepage');
+const { showHomepage, getDiaryByDate, initHomepage } = require('../controllers/homepage');
 
 /**
  * @swagger
@@ -41,5 +41,8 @@ const { showHomepage } = require('../controllers/homepage');
 
 router.route('/')
     .get(catchAsync(showHomepage))
+
+router.route('/:day')
+    .get(catchAsync(getDiaryByDate))
 
 module.exports = router;
