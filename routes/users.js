@@ -35,7 +35,7 @@ const users = require('../controllers/users');
  *                      description: 유저 이메일
  *     responses:
  *      "200":
- *          description: 유저 등록 성공
+ *          description: 등록이 완료되었습니다.
  *  delete:
  *     tags: [user]
  *     summary: 유저 삭제하기
@@ -66,7 +66,7 @@ router.route('/register')
  *                      description: 유저 비밀번호
  *     responses:
  *      "200":
- *          description: 로그인 성공 
+ *          description: 로그인 성공! 
  *     
  */
 
@@ -80,7 +80,7 @@ router.route('/login')
  *     summary: 유저 로그아웃 하기
  *     responses:
  *      "200":
- *          description: 로그아웃 성공 
+ *          description: 로그아웃 성공! 
  * 
  *     
  */
@@ -112,7 +112,8 @@ router.route('/logout')
  *     responses:
  *      "200":
  *          description: 비밀번호 변경 성공 
- *     
+ *      "401":
+ *          description: 패스워드가 일치하지 않습니다.    
  */
 
 router.route('/changepassword')
@@ -135,8 +136,9 @@ router.route('/changepassword')
  *                      description: 비밀번호 찾을 아이디    
  *     responses:
  *      "200":
- *          description: 비밀번호 변경 성공
- *     
+ *          description: 비밀번호 변경 성공!
+ *      "401":
+ *          description: 유효하지 않은 유저 아이디 입니다.     
  */
 
 router.route('/findpassword')
@@ -154,6 +156,8 @@ router.route('/findpassword')
  *              application/json:
  *                  schema:
  *                      $ref: '#/components/schemas/User'
+ *      "401":
+ *          description: 유효하지 않은 유저 아이디 입니다.
  *                  
  *  delete:
  *     tags: [user]
@@ -173,7 +177,10 @@ router.route('/findpassword')
  *          content:
  *              application/json:
  *                  schema:
- *                      $ref: '#/components/schemas/User' 
+ *                      $ref: '#/components/schemas/User'
+ *      "401":
+ *          description: 유효하지 않은 유저 아이디 입니다. 
+ *  
  *  put:
  *     tags: [user]
  *     summary: 유저 마이 페이지 추가하기
@@ -193,6 +200,8 @@ router.route('/findpassword')
  *              application/json:
  *                  schema:
  *                      $ref: '#/components/schemas/User'
+ *      "401":
+ *          description: 유효하지 않은 유저 아이디 입니다. 
  *     
  */
 router.route('/mypage')

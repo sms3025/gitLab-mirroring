@@ -2,8 +2,6 @@ if (process.env.NODE_ENV !== "production") {
     require('dotenv').config();
 }
 
-
-
 const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path')
@@ -20,6 +18,7 @@ const User = require('./models/user');
 const mongoSanitize = require('express-mongo-sanitize');
 //const helmet = require('helmet');
 const cron = require('node-cron');
+
 
 const { swaggerUi, specs } = require('./modules/swagger');
 const { updateRanking } = require('./controllers/ranking');
@@ -103,6 +102,18 @@ app.use('/explore', exploreRoutes);
 
 // 매월 0시에 실행
 // cron.schedule('0 0 1 * *', updateRanking);
+cron.schedule('0 0 * * *', async () => {
+    const users = await User.find({});
+    const promises = users.map(async (user) => {
+        user.goal = [];
+        await user.save();
+    });
+    await Promise.all(promises);
+},
+    {
+        scheduled: true,
+        timezone: "Asia/Seoul"
+    });
 
 app.get('/', (req, res) => {
     res.send('home');
@@ -114,7 +125,7 @@ app.all('*', (req, res, next) => {
 
 app.use((err, req, res, next) => {
     const { statusCode = 500 } = err;
-    if (!err.message) err.message = 'Oh No, Something Went Wrong!'
+    if (!err.message) err.message = '예기치 못한 오류가 생겼습니다.'
     res.status(statusCode).send(err);
 })
 
