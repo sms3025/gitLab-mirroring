@@ -39,7 +39,7 @@ module.exports.createDiary = async (req, res) => {
     await foundCrew.save()
     await diary.save();
 
-    res.status(201).json('success!');
+    res.status(200).json('success!');
 }
 
 module.exports.deleteDiary = async (req, res) => {

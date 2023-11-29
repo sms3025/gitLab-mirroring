@@ -14,10 +14,6 @@ function createRandomPassword(variable, passwordLength) {
     return randomString
 }
 
-module.exports.showRegister = (req, res) => {
-    res.status(200).send("register");
-}
-
 module.exports.createRegister = async (req, res) => {
     try {
         const { name, loginid, password, nickname, email } = req.body;
@@ -52,16 +48,8 @@ module.exports.deleteRegister = async (req, res) => {
     res.status(200).send("delete user success");
 }
 
-module.exports.showLogin = (req, res) => {
-    res.status(200).send("show login page");
-}
-
 module.exports.createLogin = (req, res) => {
     res.status(200).send("login success");
-}
-
-module.exports.showLogout = (req, res) => {
-    res.status(200).send("show logout page");
 }
 
 module.exports.createLogout = (req, res, next) => {
@@ -70,16 +58,7 @@ module.exports.createLogout = (req, res, next) => {
             return next(err);
         }
     });
-    req.logout(err => {
-        if (err) {
-            return next(err);
-        }
-    });
     res.status(200).send("logout success");
-}
-
-module.exports.showChangePassword = (req, res) => {
-    res.status(200).send("showChangePassword!");
 }
 
 module.exports.changePassword = async (req, res) => {
@@ -92,10 +71,6 @@ module.exports.changePassword = async (req, res) => {
         await user.changePassword(oldPassword, password);
         res.status(200).send("change password!!");
     }
-}
-
-module.exports.showFindPassword = (req, res) => {
-    res.status(200).send("showSetPassword!");
 }
 
 module.exports.findPassword = async (req, res) => {
