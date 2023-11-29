@@ -18,15 +18,18 @@ module.exports.createRegister = async (req, res) => {
     try {
         const { name, loginid, password, nickname, email } = req.body;
         //console.log(req.body);
+        if (!password) {
+            throw new ExpressError("패스워드가 없습니다.", 403);
+        }
         const user = new User({ name, loginid, nickname, email })
         const newUser = await User.register(user, password);
         // req.login(newUser, err => {
         //     if (err) return next(err);
         //     res.status(200);
         // })
-        res.status(200).send("register OK");
+        res.status(200).send("등록이 완료되었습니다.");
     } catch (e) {
-        res.status(400).send(e);
+        throw new ExpressError("중복회원이 존재합니다.", 403);
     }
 }
 
@@ -37,7 +40,7 @@ module.exports.deleteRegister = async (req, res) => {
     });
     const user = await User.findById(userId);
     if (!user) {
-        return res.status(400).send("Invalid userId");
+        throw new ExpressError("존재하지 않는 유저 아이디입니다.", 400);
     }
     const filename = user.image.filename;
     if (filename) {
@@ -45,11 +48,11 @@ module.exports.deleteRegister = async (req, res) => {
     }
     await Crew.updateMany({}, { $pullAll: { users: [userId] } })
     await User.deleteOne({ _id: userId });
-    res.status(200).send("delete user success");
+    res.status(200).send("유저 삭제 성공");
 }
 
 module.exports.createLogin = (req, res) => {
-    res.status(200).send("login success");
+    res.status(200).send("로그인 성공!");
 }
 
 module.exports.createLogout = (req, res, next) => {
@@ -58,14 +61,18 @@ module.exports.createLogout = (req, res, next) => {
             return next(err);
         }
     });
-    res.status(200).send("logout success");
+    req.logout(err => {
+        if (err) {
+            return next(err);
+        }
+    });
+    res.status(200).send("로그아웃 성공!");
 }
 
 module.exports.changePassword = async (req, res) => {
     const { oldPassword, password, password2 } = req.body;
     if (password !== password2) {
-        res.status(400).send("password errer");
-        throw new ExpressError("PASSWORD ERROR");
+        throw new ExpressError("패스워드가 일치하지 않습니다.", 401);
     } else {
         const user = await User.findById(req.user._id);
         await user.changePassword(oldPassword, password);
@@ -77,7 +84,7 @@ module.exports.findPassword = async (req, res) => {
     const oldloginid = req.body.loginid;
     const user = await User.findOne({ loginid: oldloginid }).populate('crews');
     if (!user) {
-        return res.status(400).send("Invalid userId");
+        throw new ExpressError("유효하지 않은 유저 아이디 입니다.", 401);
     }
     const randomPassword = createRandomPassword(variable, 8);
     const name = user.name;
@@ -109,7 +116,7 @@ module.exports.findPassword = async (req, res) => {
             + '<h3 style="color: crimson;">임시 비밀번호로 로그인 하신 후, 반드시 비밀번호를 수정해 주세요.</h3>'
     };
     transporter.sendMail(emailOptions);
-    res.status(200).send("SetPasswordSuccess");
+    res.status(200).send("비밀번호 변경 성공!");
 }
 
 module.exports.showMyPage = async (req, res) => {
@@ -117,7 +124,7 @@ module.exports.showMyPage = async (req, res) => {
     const user = await User.findById({ _id: userId })
         .populate('crews')
     if (!user) {
-        return res.status(400).send("Invalid userId");
+        throw new ExpressError("유효하지 않은 유저 아이디 입니다.", 401);
     }
     res.status(200).send(user);
 }
@@ -126,6 +133,9 @@ module.exports.deleteMyPage = async (req, res) => {
     const userId = req.user_id;
     const idx = req.body.idx;
     const user = await User.findById({ _id: userId })
+    if (!user) {
+        throw new ExpressError("유효하지 않은 유저 아이디 입니다.", 401);
+    }
     user.goal.splice(idx, 1);
     await user.save();
     res.status(200).send(user);
@@ -135,6 +145,9 @@ module.exports.addMyPage = async (req, res) => {
     const userId = req.user_id;
     const text = req.body.text;
     const user = await User.findById({ _id: userId })
+    if (!user) {
+        throw new ExpressError("유효하지 않은 유저 아이디 입니다.", 401);
+    }
     user.goal.push(text);
     await user.save();
     res.status(200).send(user);
