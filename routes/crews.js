@@ -39,20 +39,7 @@ const { upload } = require('../aws/index');
 router.route('/')
     .post(isLoggedIn, upload.single('filename'), catchAsync(crews.createCrew))
 
-/**
- * @swagger
- * /crew/new:
- *  get:
- *      tags:
- *      - crew
- *      description:
- *      - application/json
- *      
- *          
- *          
- *              
- *
- */
+
 router.route('/new')
     .get(isLoggedIn, catchAsync(async (req, res) => {
         res.status(200).send("newPage!");
@@ -121,9 +108,7 @@ router.route('/:crewId')
  *          '200':
  *              description: OK
  * 
- *  delete:
- *      tags: [crew]
- *      summary: 해당 크루에서 해당 사용자 삭제하기
+ *  
  */
 router.route('/:crewId/user/')
     .post(catchAsync(crews.addNewMember))
