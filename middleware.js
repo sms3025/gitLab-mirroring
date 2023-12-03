@@ -14,7 +14,7 @@ module.exports.isLoggedIn = (req, res, next) => {
     next();
 }
 
-module.exports.inNotLoggedIn = async (req, res, next) => {
+module.exports.isNotLoggedIn = async (req, res, next) => {
     if(!req.isAuthenticated()){
         next();
     }
