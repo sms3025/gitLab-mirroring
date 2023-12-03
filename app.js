@@ -9,19 +9,15 @@ const flash = require('connect-flash');
 const ExpressError = require('./utils/ExpressError');
 const exp = require('constants');
 const passport = require('passport');
-const LocalStrategy = require('passport-local');
+const LocalStrategy = require('passport-local').Strategy;
 const dbUrl = 'mongodb://127.0.0.1:27017/health-crew';
 const User = require('./models/user');
 const mongoSanitize = require('express-mongo-sanitize');
-
+const passportConfig = require('./passport');
 //const helmet = require('helmet');
 
 
 const cron = require('node-cron');
-
-
-
-
 
 const { swaggerUi, specs } = require('./modules/swagger');
 const { updateRanking } = require('./controllers/ranking');
@@ -66,6 +62,7 @@ app.use(function (req, res, next) {
         next();
     }
 });
+passportConfig();
 const sessionConfig = { //세션 정보 추가
     store, //저장소 정보
     name: 'session',
@@ -92,14 +89,14 @@ app.use(mongoSanitize());
 //}));
 
 
+app.use(passport.initialize());
 app.use(passport.session());
 app.use(express.urlencoded({ extended: true }));
-app.use(passport.initialize());
 app.use(express.json());
-passport.use(new LocalStrategy(User.authenticate()));
+//passport.use(new LocalStrategy(User.authenticate()));
 
-passport.serializeUser(User.serializeUser());
-passport.deserializeUser(User.deserializeUser());
+//passport.serializeUser(User.serializeUser());
+//passport.deserializeUser(User.deserializeUser());
 
 mongoose.connect(dbUrl)
     .then(() => {

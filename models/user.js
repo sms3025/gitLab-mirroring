@@ -35,9 +35,9 @@ const UserSchema = new Schema({
 
 });
 
-UserSchema.plugin(passportLocalMongoose, {
-    usernameField: 'loginid'
-});
+// UserSchema.plugin(passportLocalMongoose, {
+//     usernameField: 'loginid'
+// });
 
 
 

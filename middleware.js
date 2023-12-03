@@ -14,6 +14,15 @@ module.exports.isLoggedIn = (req, res, next) => {
     next();
 }
 
+module.exports.inNotLoggedIn = async (req, res, next) => {
+    if(!req.isAuthenticated()){
+        next();
+    }
+    else{
+        res.status(403).send('이미 로그인 되어있음.');
+    }
+}
+
 module.exports.isCrewManger = async (req, res, next) => {
     const userId = req.user._id;
     const crewId = req.params.crewId;

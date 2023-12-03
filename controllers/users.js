@@ -4,7 +4,7 @@ const Crew = require('../models/crew');
 const ExpressError = require('../utils/ExpressError');
 const { deleteImage } = require('../aws/index');
 const nodemailer = require('nodemailer');
-//require('dotenv').config();
+const passport = require('passport')
 const variable = "0,1,2,3,4,5,6,7,8,9,a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z".split(",");
 //비밀번호 랜덤 함수
 function createRandomPassword(variable, passwordLength) {
@@ -53,6 +53,26 @@ module.exports.deleteRegister = async (req, res) => {
 
 module.exports.createLogin = (req, res) => {
     res.status(200).send("로그인 성공!");
+}
+
+module.exports.localLogin = async (req, res ,next) => {
+    passport.authenticate('local', (authError, user, info) => {
+        if(authError){
+            res.status(500);
+            return next(authError);
+        }
+        if(!user){
+            res.status(500);
+            return res.send(info.message);
+        }
+        return req.login(user, (loginError) => {
+            if(loginError){
+                res.status(500);
+                return next(loginError);
+            }
+            return res.send(user);
+        });
+    })(req, res, next);
 }
 
 module.exports.createLogout = (req, res, next) => {

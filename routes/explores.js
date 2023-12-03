@@ -6,9 +6,9 @@ const explores = require('../controllers/explores')
 
 /**
  * @swagger
- * /explores:
+ * /explore:
  *  get:
- *      tags: [explores]
+ *      tags: [explore]
  *      summary: 모든 크루 목록 보여주기
  * 
  *      responses:
