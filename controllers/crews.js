@@ -10,8 +10,10 @@ const { deleteImage } = require('../aws/index');
 
 module.exports.createCrew = async (req, res) => {
     //crew 생성요청 처리
-    const userId = req.body._id;
+    const userId = req.user._id;
     const { crewname, exercise, cycle, description } = req.body;
+
+    const foundUser = await User.findById(userId);
 
 
     const crew = new Crew({
@@ -22,8 +24,10 @@ module.exports.createCrew = async (req, res) => {
         manager: userId,
         users: [userId]
     });
-    crew.image = { filename: req.file.key, url: req.file.location }
+    crew.image = { filename: req.file.key, url: req.file.location };
+    foundUser.crews.push(crew);
     await crew.save();
+    await foundUser.save();
 
     res.status(201).json('success');
 }
@@ -133,7 +137,7 @@ module.exports.deleteCrewMember = async (req, res) => {
     await Crew.findByIdAndUpdate(crewId, { $pullAll: { users: [userId] } });
     await User.findByIdAndUpdate(userId, { $pullAll: { crews: [crewId] } });
 
-    const foundNotion = await Notion.find({author: userId, crew: crewId});
+    const foundNotion = await Notion.find({ author: userId, crew: crewId });
 
     foundNotion.forEach(async notion => {
         if (notion.image) {
@@ -145,7 +149,7 @@ module.exports.deleteCrewMember = async (req, res) => {
         }
     })
 
-    const foundDiary = await Diary.find({author: userId, crew: crewId});
+    const foundDiary = await Diary.find({ author: userId, crew: crewId });
 
     foundDiary.forEach(async diary => {
         if (diary.image) {
