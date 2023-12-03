@@ -1,6 +1,3 @@
-if (process.env.NODE_ENV !== "production") {
-    require('dotenv').config();
-}
 
 const express = require('express');
 const mongoose = require('mongoose');
@@ -20,7 +17,7 @@ const mongoSanitize = require('express-mongo-sanitize');
 //const helmet = require('helmet');
 
 
-//const cron = require('node-cron');
+const cron = require('node-cron');
 
 
 
@@ -47,8 +44,28 @@ const store = MongoStore.create({
         secret: process.env.SECRET
     }
 })
+app.set('trust proxy', 1);
+app.use(function (req, res, next) {
 
-
+    if (req.method === 'OPTIONS') {
+        const headers = {};
+        headers["Access-Control-Allow-Origin"] = "http://localhost:5173";
+        headers["Access-Control-Allow-Methods"] = "POST, GET, DELETE, OPTIONS";
+        headers["Access-Control-Allow-Headers"] = "X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept, Origin, Authorization, X-PINGOTHER";
+        headers["Access-Control-Allow-Credentials"] = true;
+        headers["Access-Control-Max-Age"] = '86400';
+        res.writeHead(200, headers);
+        res.end();
+    }
+    else {
+        res.setHeader("Access-Control-Allow-Origin", "http://localhost:5173");
+        res.setHeader("Access-Control-Allow-Methods", 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+        res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization, Access-Control-Allow-Headers, Access-Control-Request-Method, Access-Control-Request-Headers, X-Auth-Token, X-PINGOTHER');
+        res.setHeader('Access-Control-Allow-Credentials', true);
+        res.setHeader('Access-Control-Max-Age', '60');
+        next();
+    }
+});
 const sessionConfig = { //세션 정보 추가
     store, //저장소 정보
     name: 'session',
@@ -57,9 +74,10 @@ const sessionConfig = { //세션 정보 추가
     saveUninitialized: true,
     cookie: {
         httpOnly: true, //간단한 보안 기능
-        // secure: true,
+        //secure: true,
         expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
-        maxAge: 1000 * 60 * 60 * 24 * 7
+        maxAge: 1000 * 60 * 60 * 24 * 7,
+        //sameSite: 'none'
     }
 }
 
@@ -99,14 +117,7 @@ app.use((req, res, next) => {
     next();
 })
 
-app.use(function (req, res, next) {
-    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:5173');
-    //res.setHeader('Access-Control-Allow-Origin', 'http://127.0.0.1:5173');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
-    res.setHeader('Access-Control-Allow-Credentials', true);
-    next();
-});
+
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 
@@ -120,19 +131,21 @@ app.use('/explore', exploreRoutes);
 
 
 // 매월 0시에 실행
-// cron.schedule('0 0 1 * *', updateRanking);
-cron.schedule('0 0 * * *', async () => {
-    const users = await User.find({});
-    const promises = users.map(async (user) => {
-        user.goal = [];
-        await user.save();
-    });
-    await Promise.all(promises);
-},
-    {
-        scheduled: true,
-        timezone: "Asia/Seoul"
-    });
+//cron.schedule('0 0 1 * *', updateRanking);
+if (process.env.INSTANCE_ID === '0') {
+    cron.schedule('0 0 * * *', async () => {
+        const users = await User.find({});
+        const promises = users.map(async (user) => {
+            user.goal = [];
+            await user.save();
+        });
+        await Promise.all(promises);
+    },
+        {
+            scheduled: true,
+            timezone: "Asia/Seoul"
+        });
+}
 
 app.get('/', (req, res) => {
     res.send('home');

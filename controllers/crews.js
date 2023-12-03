@@ -10,7 +10,7 @@ const { deleteImage } = require('../aws/index');
 
 module.exports.createCrew = async (req, res) => {
     //crew 생성요청 처리
-    const userId = req.body._id;
+    const userId = req.user._id;
     const { crewname, exercise, cycle, description } = req.body;
 
 
