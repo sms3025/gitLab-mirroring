@@ -72,7 +72,7 @@ router.route('/register')
 
 router.route('/login')
     //.post(passport.authenticate('local', { failureFlash: true }), users.createLogin)
-    .post(isNotLoggedIn, users.createLogin)
+    .post(isNotLoggedIn, users.localLogin)
 /**
  * @swagger
  * /logout:
