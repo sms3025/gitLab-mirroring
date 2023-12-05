@@ -18,7 +18,7 @@ const DiarySchema = new Schema({
         filename: String
     },
     type: String,
-    time: Number,
+    time: String,
     memo: String,
     like: {
         type: Number,

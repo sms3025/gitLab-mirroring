@@ -1,7 +1,8 @@
 const ExpressError = require('../utils/ExpressError');
 const Diary = require('../models/diary')
 const DiaryComment = require('../models/diarycomment');
-const User = require('../models/user')
+const User = require('../models/user');
+const Crew = require('../models/crew');
 const { deleteImage } = require('../aws/index');
 
 module.exports.newDiaryForm = async (req, res) => {

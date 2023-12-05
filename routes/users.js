@@ -71,8 +71,8 @@ router.route('/register')
  */
 
 router.route('/login')
-    //.post(passport.authenticate('local', { failureFlash: true }), users.createLogin)
-    .post(isNotLoggedIn, users.localLogin)
+    .post(passport.authenticate('local', { failureFlash: true }), users.createLogin)
+    //.post(isNotLoggedIn, users.localLogin)
 /**
  * @swagger
  * /logout:
@@ -206,7 +206,7 @@ router.route('/findpassword')
  *     
  */
 router.route('/mypage')
-    .get(isLoggedIn, catchAsync(users, users.showMyPage))
+    .get(isLoggedIn, catchAsync(users.showMyPage))
     .delete(isLoggedIn, catchAsync(users.deleteMyPage))
     .put(isLoggedIn, catchAsync(users.addMyPage))
 
