@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const catchAsync = require('../utils/catchAsync');
-const mongoose = require('mongoose');
 const diaries = require('../controllers/diaries')
 const { upload } = require('../aws/index');
+const { isLoggedIn } = require('../middleware');
 
 /**
  * @swagger
@@ -39,7 +39,7 @@ const { upload } = require('../aws/index');
  * 
  */
 router.route('/')
-    .post(upload.single('filename'), catchAsync(diaries.createDiary))
+    .post(isLoggedIn, upload.single('filename'), catchAsync(diaries.createDiary))
 
 /**
  * @swagger
@@ -54,23 +54,43 @@ router.route('/')
  *              content:
  *                  application/json:
  *                      schema:
- *                          type: array
- *                          items:
- *                              $ref: '#/components/schemas/Crew'
+ *                          $ref: '#/components/schemas/Crew'
  *                              
  */
 router.route('/new')
-    .get(catchAsync(diaries.newDiaryForm))
+    .get(isLoggedIn, catchAsync(diaries.newDiaryForm))
 
 /**
  * @swagger
  * /diary/:diaryId:
+ *  parameters:
+ *  - name: diaryId
+ *      in: path
+ *      required: true
+ *      description: 운동기록 id
+ *      
  *  delete:
  *      tags: [diary]
  *      summary: 해당 운동기록 삭제하기
+ *  
+ *  get:
+ *      tags: [diary]
+ *      summary: 해당 운동기록 보여주기
+ *      
+ *      responses:
+ *          '200':
+ *              description: OK
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          type: array
+ *                          items:
+ *                              $ref: '#/components/schemas/Diary'
+ *          
  */
 router.route('/:diaryId')
-    .delete(catchAsync(diaries.deleteDiary))
+    .get(isLoggedIn, catchAsync(diaries.showDiary))
+    .delete(isLoggedIn, catchAsync(diaries.deleteDiary))
 
 /**
  * @swagger
@@ -102,7 +122,7 @@ router.route('/:diaryId')
  * 
  */
 router.route('/:diaryId/comments')
-    .post(catchAsync(diaries.createDiaryComment))
+    .post(isLoggedIn, catchAsync(diaries.createDiaryComment))
 
 /**
  * @swagger
@@ -114,7 +134,7 @@ router.route('/:diaryId/comments')
  *      summary: 해당 운동기록에 해당 댓글 삭제하기
  */
 router.route('/:diaryId/comments/:commentId')
-    .delete(catchAsync(diaries.deleteDiaryComment))
+    .delete(isLoggedIn, catchAsync(diaries.deleteDiaryComment))
 
 
 module.exports = router;

@@ -1,7 +1,8 @@
 const ExpressError = require('../utils/ExpressError');
 const Diary = require('../models/diary')
 const DiaryComment = require('../models/diarycomment');
-const User = require('../models/user')
+const User = require('../models/user');
+const Crew = require('../models/crew');
 const { deleteImage } = require('../aws/index');
 
 module.exports.newDiaryForm = async (req, res) => {
@@ -28,7 +29,7 @@ module.exports.createDiary = async (req, res) => {
         time: time,
         memo: memo
     });
-
+    
     const foundCrew = await Crew.findById(crewId);
     foundCrew.users.forEach(obj => {
         if (obj.user === userId) {
@@ -73,7 +74,7 @@ module.exports.createDiaryComment = async (req, res) => {
     const newComment = new DiaryComment({
         post: diaryId,
         author: userId,
-        text: req.body.comment
+        text: req.body.text
     });
     foundDiary.comments.push(newComment);
     await foundDiary.save();
@@ -91,4 +92,18 @@ module.exports.deleteDiaryComment = async (req, res) => {
     await Diary.updateMany({ _id: diaryId }, { $pullAll: { comments: [commentId] } });
 
     res.status(200).json('success');
+}
+
+module.exports.showDiary = async (req, res) => {
+    const diaryId = req.params.diaryId;
+
+    const foundDiary = await Diary.findById(diaryId)
+        .populate('author')
+        .populate({
+            path: 'comments',
+            populate: {
+                path: 'author'
+            }
+        });
+    res.status(200).send(foundDiary);
 }

@@ -3,6 +3,7 @@ const catchAsync = require('../utils/catchAsync');
 const router = express.Router();
 const notions = require('../controllers/notions');
 const { upload } = require('../aws/index');
+const { isLoggedIn } = require('../middleware');
 
 /**
  * @swagger
@@ -36,17 +37,42 @@ const { upload } = require('../aws/index');
  */
 router.route('/')
     .get()
-    .post(upload.single('filename'), catchAsync(notions.createNotion))
+    .post(isLoggedIn, upload.single('filename'), catchAsync(notions.createNotion))
 
 /**
  * @swagger
  * /crew/:crewId/notion/:notionId:
+ *  parameters:
+ *  - name: crewId
+ *    in: path
+ *    required: true
+ *    description: 크루 id
+ *    schema:
+ *      type: number 
+ *  - name: notionId
+ *    in: path
+ *    required: true
+ *    schema:
+ *      type: number
  *  delete:
  *      tags: [notion]
  *      summary: 해당 게시글 삭제하기
+ * 
+ *  get:
+ *      tags: [notion]
+ *      summary: 해당 게시글 보여주기
+ * 
+ *      responses:
+ *          '200':
+ *              description: OK
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                           $ref: '#/components/schemas/Notion'
  */
 router.route('/:notionId')
-    .delete(catchAsync(notions.deleteNotion))
+    .get(isLoggedIn, catchAsync(notions.showNotion))
+    .delete(isLoggedIn, catchAsync(notions.deleteNotion))
 
 /**
  * @swagger
@@ -82,7 +108,7 @@ router.route('/:notionId')
  *              description: OK
  */
 router.route('/:notionId/comments')
-    .post(catchAsync(notions.createNotionComment))
+    .post(isLoggedIn, catchAsync(notions.createNotionComment))
 
 /**
  * @swagger
@@ -92,6 +118,6 @@ router.route('/:notionId/comments')
  *      summary: 해당 게시글에 해당 댓글 삭제하기
  */
 router.route('/:notionId/comments/:commentId')
-    .delete(catchAsync(notions.deleteNotionComment))
+    .delete(isLoggedIn, catchAsync(notions.deleteNotionComment))
 
 module.exports = router;

@@ -12,7 +12,7 @@ module.exports.createNotion = async (req, res) => {
         author: userId,
         crew: crewId,
         image: { url: req.file.location, filename: req.file.key },
-        text: req.body
+        text: req.body.text
     });
 
     await newNotion.save();
@@ -21,7 +21,7 @@ module.exports.createNotion = async (req, res) => {
 }
 
 module.exports.deleteNotion = async (req, res) => {
-    const notionId = notionId;
+    const notionId = req.params.notionId;
     const foundNotion = await Notion.findById(notionId);
     const filename = foundNotion.image.key;
 
@@ -49,10 +49,10 @@ module.exports.createNotionComment = async (req, res) => {
     const userId = req.user._id;
     const { notionId } = req.params;
     const foundNotion = await Notion.findById(notionId);
-    const newComment = NotionComment({
+    const newComment = new NotionComment({
         author: userId,
         post: notionId,
-        text: req.body
+        text: req.body.text
     })
     foundNotion.comments.push(newComment);
     await foundNotion.save();
@@ -68,4 +68,17 @@ module.exports.deleteNotionComment = async (req, res) => {
     await Notion.updateMany({ _id: notionId }, { $pullAll: { comments: [commentId] } });
 
     res.status(200).json('success');
+}
+
+module.exports.showNotion = async (req, res) => {
+    const { notionId } = req.params;
+
+    const foundNotion = await Notion.findById(notionId)
+        .populate('author')
+        .populate({
+            path: 'comments',
+            populate: 'author'
+        })
+
+    res.status(200).send(foundNotion);
 }

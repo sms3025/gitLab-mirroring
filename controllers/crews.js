@@ -22,7 +22,7 @@ module.exports.createCrew = async (req, res) => {
         cycle: cycle,
         description: description,
         manager: userId,
-        users: [userId]
+        users: [{user:userId, count: 0}]
     });
     crew.image = { filename: req.file.key, url: req.file.location };
     foundUser.crews.push(crew);
@@ -36,10 +36,10 @@ module.exports.showCrew = async (req, res) => {
     //crew 들어온 후 홈화면
 
     // Diary db에서 운동기록
-    const crewId = req.params.id;
+    const crewId = req.params.crewId;
     const crew = await Crew.findById(crewId)
         .populate('users')
-        .populate('author')
+        
     if (!crew) {
         throw new ExpressError("there is no crew", 400);
     }
@@ -78,7 +78,7 @@ module.exports.showCrew = async (req, res) => {
 
 module.exports.deleteCrew = async (req, res) => {
     // 크루 이미지, 올린 운동기록, 올린 왁자지껄 각 댓글들
-    const crewId = req.params.id;
+    const crewId = req.params.crewId;
     const foundCrew = await Crew.findById(crewId);
 
     await User.updateMany({}, { $pullAll: { crews: [crewId] } });
@@ -116,9 +116,9 @@ module.exports.deleteCrew = async (req, res) => {
 module.exports.addNewMember = async (req, res) => {
     // 크루에 새로운 유저 등록
     const userId = req.user._id;
-    const crewId = req.params.id;
+    const crewId = req.params.crewId;
     const foundCrew = await Crew.findById(crewId);
-    foundCrew.users.push(userId);
+    foundCrew.users.push({ user: userId, count: 0 });
 
     const foundUser = await User.findById(userId);
     foundUser.crews.push(crewId);
