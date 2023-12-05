@@ -22,7 +22,7 @@ module.exports.createCrew = async (req, res) => {
         cycle: cycle,
         description: description,
         manager: userId,
-        users: [{user:userId, count: 0}]
+        users: [{user: userId, count: 0}]
     });
     crew.image = { filename: req.file.key, url: req.file.location };
     foundUser.crews.push(crew);
@@ -38,8 +38,8 @@ module.exports.showCrew = async (req, res) => {
     // Diary db에서 운동기록
     const crewId = req.params.crewId;
     const crew = await Crew.findById(crewId)
-        .populate('users')
-        
+        .populate('users.user')
+
     if (!crew) {
         throw new ExpressError("there is no crew", 400);
     }
@@ -52,9 +52,9 @@ module.exports.showCrew = async (req, res) => {
             }
         })
         .sort({ 'uploadtime': -1 });
-    if (!diaries) {
-        throw new ExpressError("there is no diary", 400);
-    }
+    //if (!diaries) {
+        //throw new ExpressError("there is no diary", 400);
+    //}
     // notion db에서 게시글
     const notions = await Notion.find({ crew: crewId })
         .populate('author')
@@ -64,14 +64,15 @@ module.exports.showCrew = async (req, res) => {
                 path: 'author'
             }
         })
-        .sort({ 'uploadtime': -1 });
-    if (!notions) {
-        throw new ExpressError("there is no notion", 400);
-    }
+        .sort({ 'uploadtime': -1 })
+    //if (!notions) {
+        //throw new ExpressError("there is no notion", 400);
+    //}
 
     const result = {
         diaries: diaries,
-        notions: notions
+        notions: notions,
+	crewname: crew.crewname
     }
     res.status(200).send(result);
 }
@@ -118,7 +119,7 @@ module.exports.addNewMember = async (req, res) => {
     const userId = req.user._id;
     const crewId = req.params.crewId;
     const foundCrew = await Crew.findById(crewId);
-    foundCrew.users.push({ user: userId, count: 0 });
+    foundCrew.users.push({user: userId, count: 0});
 
     const foundUser = await User.findById(userId);
     foundUser.crews.push(crewId);
