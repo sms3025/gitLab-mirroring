@@ -35,7 +35,7 @@ module.exports.createDiary = async (req, res) => {
     
     const foundCrew = await Crew.findById(crewId);
     foundCrew.users.forEach(obj => {
-        if (obj.user._id == userId) {
+        if (obj.user.toString() === userId.toString()) {
             obj.count += 1;
         }
     })

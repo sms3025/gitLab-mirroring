@@ -120,6 +120,15 @@ module.exports.addNewMember = async (req, res) => {
     const userId = req.user._id;
     const crewId = req.params.crewId;
     const foundCrew = await Crew.findById(crewId);
+    const isMember = false
+    foundCrew.users.forEach(obj => {
+        if(obj.user.toString() === userId.toString()){
+            isMember = true
+        }
+    })
+    if(isMember){
+        return res.status(200).json('이미 가입한 크루입니다.');
+    }
     foundCrew.users.push({user: userId, count: 0});
 
     const foundUser = await User.findById(userId);
