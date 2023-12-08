@@ -6,7 +6,7 @@ const ExpressError = require('../utils/ExpressError');
 module.exports.showRanking = async (req, res) => {
     const crewId = req.params.crewId;
     console.log("crewId, rnk", crewId)
-    const foundCrew = Crew.findById(crewId)
+    const foundCrew = await Crew.findById(crewId)
         .populate('users.user')
         .sort({ 'users.count': -1, 'users.user.nickname': 1 });
     console.log("showRanking",foundCrew)
