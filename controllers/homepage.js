@@ -33,7 +33,7 @@ module.exports.showHomepage = async (req, res) => {
 
     const diaryList = [[]];
     foundDiary.forEach(diary => {
-        const day = diary.uploadtime.getDay();
+        const day = diary.uploadtime.getDate();
         diaryList[day].push(diary)
     })
     const result = {
@@ -75,7 +75,7 @@ module.exports.initHomepage = async (req, res) => {
 
     const diaryList = new Array(32).fill(0);
     foundDiary.forEach(diary => {
-        const day = diary.uploadtime.getDay();
+        const day = diary.uploadtime.getDate();
 
         diaryList[day] = 1;
     })

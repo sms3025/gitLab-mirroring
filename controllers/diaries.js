@@ -21,18 +21,21 @@ module.exports.createDiary = async (req, res) => {
     //create new diary
     const userId = req.user._id;
     const { crewId, type, time, memo } = req.body;
+    const offset = 1000 * 60 * 60 * 9
+    const krDate = new Date((new Date()).getTime() + offset)
     const diary = new Diary({
         author: userId,
         crew: crewId,
         image: { filename: req.file.key, url: req.file.location },
         type: type,
         time: time,
-        memo: memo
+        memo: memo,
+        uploadtime: krDate
     });
     
     const foundCrew = await Crew.findById(crewId);
     foundCrew.users.forEach(obj => {
-        if (obj.user === userId) {
+        if (obj.user._id == userId) {
             obj.count += 1;
         }
     })
@@ -71,10 +74,13 @@ module.exports.createDiaryComment = async (req, res) => {
     const diaryId = req.params.diaryId;
     const foundDiary = await Diary.findById(diaryId);
     const userId = req.user._id;
+    const offset = 1000 * 60 * 60 * 9
+    const krDate = new Date((new Date()).getTime() + offset)
     const newComment = new DiaryComment({
         post: diaryId,
         author: userId,
-        text: req.body.text
+        text: req.body.text,
+        uploadtime: krDate,
     });
     foundDiary.comments.push(newComment);
     await foundDiary.save();
