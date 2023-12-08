@@ -70,7 +70,7 @@ module.exports.initHomepage = async (req, res) => {
     const endDate = new Date();
     endDate.setMonth(refDate.getMonth() + 1);
 
-    const foundDiary = await Diary.find({ uploadtime: { $gte: refDate, $lt: endDate }, _id: userId })
+    const foundDiary = await Diary.find({ uploadtime: { $gte: refDate, $lt: endDate }, author: userId })
         .sort({ 'uploadtime': 1 });
 
     const diaryList = new Array(32).fill(0);
@@ -96,7 +96,7 @@ module.exports.getDiaryByDate = async (req, res) => {
     const endDate = new Date();
     endDate.setDate(refDate.getDate() + 1);
 
-    const foundDiary = await Diary.find({ uploadtime: { $gte: refDate, $lt: endDate }, _id: userId })
+    const foundDiary = await Diary.find({ uploadtime: { $gte: refDate, $lt: endDate }, author: userId })
         .sort({ 'uploadtime': 1 });
     const diaryList = foundDiary.map(diary => {
         const d = {

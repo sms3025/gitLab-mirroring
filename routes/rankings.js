@@ -30,7 +30,7 @@ const ranking = require('../controllers/ranking')
  *                      description: 사용자를 운동횟수와 이름 순으로 정렬하였음.
  *              
  */
-router.route('/')
+router.route('/:crewId/ranking')
     .get(catchAsync(ranking.showRanking));
 
 module.exports = router;

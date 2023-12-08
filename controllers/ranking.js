@@ -4,7 +4,7 @@ const Diary = require('../models/diary');
 const ExpressError = require('../utils/ExpressError');
 
 module.exports.showRanking = async (req, res) => {
-    const crewId = req.params.id;
+    const crewId = req.params.crewId;
     const foundCrew = Crew.findById(crewId)
         .populate('users.user')
         .sort({ 'users.count': -1, 'users.user.nickname': 1 });

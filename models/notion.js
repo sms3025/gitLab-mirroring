@@ -18,11 +18,11 @@ const NotionSchema = new Schema({
     text: String,
     like: {
         type: Number,
-        defaule: 0,
+        default: 0,
     },
     comments: [{
         type: Schema.Types.ObjectId,
-        ref: 'Notioncomment'
+        ref: 'NotionComment'
     }],
     uploadtime: {
         type: Date,

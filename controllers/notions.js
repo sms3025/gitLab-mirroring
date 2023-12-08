@@ -7,7 +7,7 @@ const NotionComment = require('../models/notioncomment')
 module.exports.createNotion = async (req, res) => {
     const crewId = req.params.crewId;
     const userId = req.user._id;
-
+    console.log(req.params.crewId);
     const newNotion = new Notion({
         author: userId,
         crew: crewId,

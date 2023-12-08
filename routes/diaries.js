@@ -62,12 +62,12 @@ router.route('/new')
 
 /**
  * @swagger
- * /diary/:diaryId:
+ * /diary/{diaryId}:
  *  parameters:
  *  - name: diaryId
- *      in: path
- *      required: true
- *      description: 운동기록 id
+ *    in: path
+ *    required: true
+ *    description: 운동기록 id
  *      
  *  delete:
  *      tags: [diary]

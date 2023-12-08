@@ -115,8 +115,8 @@ app.use('/', userRoutes);
 app.use('/homepage', homepageRoutes);
 app.use('/diary', diaryRoutes);
 app.use('/crew', crewRoutes);
-app.use('/crew/:crewId/notion', notionRoutes);
-app.use('/crew/:crewId/ranking', rankingRoutes);
+app.use('/crew', notionRoutes);
+app.use('/crew', rankingRoutes);
 app.use('/explore', exploreRoutes);
 
 
