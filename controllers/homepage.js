@@ -101,7 +101,8 @@ module.exports.getDiaryByDate = async (req, res) => {
     endDate.setDate(refDate.getDate() + 1);
 
     const foundDiary = await Diary.find({ uploadtime: { $gte: refDate, $lt: endDate }, author: userId })
-        .sort({ 'uploadtime': 1 });
+        .populate('crew')
+        .sort({ 'uploadtime': 1 })
     const diaryList = foundDiary.map(diary => {
         const d = {
             id: diary._id,
@@ -109,6 +110,7 @@ module.exports.getDiaryByDate = async (req, res) => {
             time: diary.time,
             memo: diary.memo,
             uploadtime: diary.uploadtime,
+            crewname: diary.crew.crewname
         }
         return d;
     })
