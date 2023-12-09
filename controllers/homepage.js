@@ -63,9 +63,10 @@ module.exports.initHomepage = async (req, res) => {
         return c;
     })
 
-
-    const needMonth = new Date().getMonth();
-    const currentYear = new Date().getFullYear();
+    const offset = 1000 * 60 * 60 * 9
+    const krDate = new Date((new Date()).getTime() + offset)
+    const needMonth = krDate.getMonth();
+    const currentYear = krDate.getFullYear();
     const refDate = new Date(currentYear, needMonth, 1);
     const endDate = new Date();
     endDate.setMonth(refDate.getMonth() + 1);
@@ -89,8 +90,11 @@ module.exports.initHomepage = async (req, res) => {
 
 module.exports.getDiaryByDate = async (req, res) => {
     const userId = req.user._id;
-    const needMonth = new Date().getMonth();
+    const offset = 1000 * 60 * 60 * 9
+    const krDate = new Date((new Date()).getTime() + offset)
+    const needMonth = krDate.getMonth();
     const needDay = req.params.day;
+    const currentYear = krDate.getFullYear();
 
     const refDate = new Date(currentYear, needMonth, needDay);
     const endDate = new Date();
