@@ -13,7 +13,9 @@ module.exports.showRanking = async (req, res) => {
     const ranking = foundUser.sort((a, b) => {
         // return b.count - a.count;
         if (a.count === b.count) {
-            return a.user.nickname - b.user.nickname;
+            const aString = a.user.nickname.toString();
+            const bString = b.user.nickname.toString();
+            return aString.localeCompare(bString);
         }
         return b.count - a.count;
     });
