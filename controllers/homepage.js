@@ -77,7 +77,7 @@ module.exports.initHomepage = async (req, res) => {
     const diaryList = new Array(32).fill(0);
     foundDiary.forEach(diary => {
         const day = diary.uploadtime.getDate();
-
+        console.log(day);
         diaryList[day] = 1;
     })
     const result = {

@@ -23,6 +23,7 @@ module.exports.createDiary = async (req, res) => {
     const { crewId, type, time, memo } = req.body;
     const offset = 1000 * 60 * 60 * 9
     const krDate = new Date((new Date()).getTime() + offset)
+    console.log("1")
     const diary = new Diary({
         author: userId,
         crew: crewId,
@@ -32,17 +33,20 @@ module.exports.createDiary = async (req, res) => {
         memo: memo,
         uploadtime: krDate
     });
-    
+    console.log("2")
+    console.log("crewId: ",crewId);
     const foundCrew = await Crew.findById(crewId);
+    console.log("3")
     foundCrew.users.forEach(obj => {
         if (obj.user.toString() === userId.toString()) {
             obj.count += 1;
         }
     })
-
+    console.log("4")
     await foundCrew.save()
+    console.log("5")
     await diary.save();
-
+    console.log("6")
     res.status(200).json('success!');
 }
 
