@@ -63,21 +63,19 @@ module.exports.initHomepage = async (req, res) => {
         return c;
     })
 
-    const offset = 1000 * 60 * 60 * 9
-    const krDate = new Date((new Date()).getTime() + offset)
-    const needMonth = krDate.getMonth();
-    const currentYear = krDate.getFullYear();
+    
+    const needMonth = new Date().getUTCMonth();
+    const currentYear = new Date().getUTCFullYear();
     const refDate = new Date(currentYear, needMonth, 1);
-    const endDate = new Date();
-    endDate.setMonth(refDate.getMonth() + 1);
+    const endDate = new Date(currentYear, needMonth + 1, 1);
+   
 
     const foundDiary = await Diary.find({ uploadtime: { $gte: refDate, $lt: endDate }, author: userId })
         .sort({ 'uploadtime': 1 });
 
     const diaryList = new Array(32).fill(0);
     foundDiary.forEach(diary =>{
-        const date = new Date(diary.uploadtime.getTime() - offset);
-        const day = date.getDate();
+        const day= diary.uploadtime.getDate();
 
         diaryList[day] = 1;
     })
@@ -91,15 +89,14 @@ module.exports.initHomepage = async (req, res) => {
 
 module.exports.getDiaryByDate = async (req, res) => {
     const userId = req.user._id;
-    const offset = 1000 * 60 * 60 * 9
-    const krDate = new Date((new Date()).getTime() + offset)
-    const needMonth = krDate.getMonth();
+    
+    const needMonth = new Date().getUTCMonth();
     const needDay = req.params.day;
-    const currentYear = krDate.getFullYear();
+    const currentYear = krDate.getUTCFullYear();
 
     const refDate = new Date(currentYear, needMonth, needDay);
-    const endDate = new Date();
-    endDate.setDate(refDate.getDate() + 1);
+    const endDate = new Date(currentYear, needMonth, needDay + 1);
+    
 
     const foundDiary = await Diary.find({ uploadtime: { $gte: refDate, $lt: endDate }, author: userId })
         .populate('crew')

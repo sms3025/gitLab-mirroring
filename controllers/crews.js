@@ -39,7 +39,7 @@ module.exports.showCrew = async (req, res) => {
     const crewId = req.params.crewId;
     const crew = await Crew.findById(crewId)
         .populate('users.user')
-    console.log("showCrew: ", crewId)
+    
     if (!crew) {
         throw new ExpressError("there is no crew", 400);
     }
@@ -56,7 +56,7 @@ module.exports.showCrew = async (req, res) => {
         //throw new ExpressError("there is no diary", 400);
     //}
     // notion db에서 게시글
-    console.log("showCrew 1");
+    
     const notions = await Notion.find({ crew: crewId })
         .populate('author')
         .populate({
@@ -69,7 +69,7 @@ module.exports.showCrew = async (req, res) => {
     //if (!notions) {
         //throw new ExpressError("there is no notion", 400);
     //}
-    console.log("showCrew 2");
+  
     const result = {
         diaries: diaries,
         notions: notions,

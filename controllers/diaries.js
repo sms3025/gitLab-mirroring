@@ -21,9 +21,8 @@ module.exports.createDiary = async (req, res) => {
     //create new diary
     const userId = req.user._id;
     const { crewId, type, time, memo } = req.body;
-    const offset = 1000 * 60 * 60 * 9
-    const krDate = new Date((new Date()).getTime() + offset)
-    console.log("1")
+    
+    
     const diary = new Diary({
         author: userId,
         crew: crewId,
@@ -31,22 +30,20 @@ module.exports.createDiary = async (req, res) => {
         type: type,
         time: time,
         memo: memo,
-        uploadtime: krDate
+       
     });
-    console.log("2")
-    console.log("crewId: ",crewId);
+    
     const foundCrew = await Crew.findById(crewId);
-    console.log("3")
+    
     foundCrew.users.forEach(obj => {
         if (obj.user.toString() === userId.toString()) {
             obj.count += 1;
         }
     })
-    console.log("4")
+   
     await foundCrew.save()
-    console.log("5")
     await diary.save();
-    console.log("6")
+    
     res.status(200).json('success!');
 }
 
@@ -54,7 +51,7 @@ module.exports.deleteDiary = async (req, res) => {
     const diaryId = req.params.id;
     const foundDiary = await Diary.findById(diaryId);
     const filename = foundDiary.image.filename;
-    // console.log(diaryId, diary);
+    
     deleteImage(filename);
     const deleteComments = [];
     if (foundDiary.comments) {
@@ -78,13 +75,12 @@ module.exports.createDiaryComment = async (req, res) => {
     const diaryId = req.params.diaryId;
     const foundDiary = await Diary.findById(diaryId);
     const userId = req.user._id;
-    const offset = 1000 * 60 * 60 * 9
-    const krDate = new Date((new Date()).getTime() + offset)
+    
     const newComment = new DiaryComment({
         post: diaryId,
         author: userId,
         text: req.body.text,
-        uploadtime: krDate,
+        
     });
     foundDiary.comments.push(newComment);
     await foundDiary.save();

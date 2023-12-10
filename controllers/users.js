@@ -148,13 +148,13 @@ module.exports.showMyPage = async (req, res) => {
         throw new ExpressError("유효하지 않은 유저 아이디 입니다.", 401);
     }
     //운동횟수
-    const offset = 1000 * 60 * 60 * 9
-    const krDate = new Date((new Date()).getTime() + offset)
-    const needMonth = krDate.getMonth();
-    const currentYear = krDate.getFullYear();
-    const refDate = new Date(currentYear, needMonth, 1);
-    const endDate = new Date();
-    endDate.setMonth(refDate.getMonth() + 1);
+    
+    const needMonth = new Date().getUTCMonth();
+    const currentYear = new Date().getUTCFullYear();
+    const currentDate = new Date().getUTCDate();
+    const refDate = new Date(currentYear, needMonth, currentDate);
+    const endDate = new Date(currentYear, needMonth, currentDate + 1);
+    
 
     const foundDiary = await Diary.find({ uploadtime: { $gte: refDate, $lt: endDate }, author: userId })
     const diaryCount = foundDiary.length;
@@ -171,13 +171,11 @@ module.exports.deleteMyPage = async (req, res) => {
     }
     user.goal.splice(idx, 1);
     await user.save();
-    const offset = 1000 * 60 * 60 * 9
-    const krDate = new Date((new Date()).getTime() + offset)
-    const needMonth = krDate.getMonth();
-    const currentYear = krDate.getFullYear();
-    const refDate = new Date(currentYear, needMonth, 1);
-    const endDate = new Date();
-    endDate.setMonth(refDate.getMonth() + 1);
+    const needMonth = new Date().getUTCMonth();
+    const currentYear = new Date().getUTCFullYear();
+    const currentDate = new Date().getUTCDate();
+    const refDate = new Date(currentYear, needMonth, currentDate);
+    const endDate = new Date(currentYear, needMonth, currentDate + 1);
 
     const foundDiary = await Diary.find({ uploadtime: { $gte: refDate, $lt: endDate }, author: userId })
     const diaryCount = foundDiary.length;
@@ -194,13 +192,11 @@ module.exports.addMyPage = async (req, res) => {
     }
     user.goal.push(text);
     await user.save();
-    const offset = 1000 * 60 * 60 * 9
-    const krDate = new Date((new Date()).getTime() + offset)
-    const needMonth = krDate.getMonth();
-    const currentYear = krDate.getFullYear();
-    const refDate = new Date(currentYear, needMonth, 1);
-    const endDate = new Date();
-    endDate.setMonth(refDate.getMonth() + 1);
+    const needMonth = new Date().getUTCMonth();
+    const currentYear = new Date().getUTCFullYear();
+    const currentDate = new Date().getUTCDate();
+    const refDate = new Date(currentYear, needMonth, currentDate);
+    const endDate = new Date(currentYear, needMonth, currentDate + 1);
 
     const foundDiary = await Diary.find({ uploadtime: { $gte: refDate, $lt: endDate }, author: userId })
     const diaryCount = foundDiary.length;

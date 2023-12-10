@@ -7,14 +7,13 @@ const NotionComment = require('../models/notioncomment')
 module.exports.createNotion = async (req, res) => {
     const crewId = req.params.crewId;
     const userId = req.user._id;
-    const offset = 1000 * 60 * 60 * 9
-    const krDate = new Date((new Date()).getTime() + offset)
+    
     const newNotion = new Notion({
         author: userId,
         crew: crewId,
         image: { url: req.file.location, filename: req.file.key },
         text: req.body.text,
-        uploadtime: krDate
+        
     });
 
     await newNotion.save();
@@ -51,13 +50,12 @@ module.exports.createNotionComment = async (req, res) => {
     const userId = req.user._id;
     const { notionId } = req.params;
     const foundNotion = await Notion.findById(notionId);
-    const offset = 1000 * 60 * 60 * 9
-    const krDate = new Date((new Date()).getTime() + offset)
+  
     const newComment = new NotionComment({
         author: userId,
         post: notionId,
         text: req.body.text,
-        uploadtime: krDate
+        
     })
     foundNotion.comments.push(newComment);
     await foundNotion.save();
