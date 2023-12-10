@@ -75,9 +75,10 @@ module.exports.initHomepage = async (req, res) => {
         .sort({ 'uploadtime': 1 });
 
     const diaryList = new Array(32).fill(0);
-    foundDiary.forEach(diary => {
-        const day = diary.uploadtime.getDate();
-        console.log(day);
+    foundDiary.forEach(diary =>{
+        const date = new Date(diary.uploadtime.getTime() - offset);
+        const day = date.getDate();
+
         diaryList[day] = 1;
     })
     const result = {
