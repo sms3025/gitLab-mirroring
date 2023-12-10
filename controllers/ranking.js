@@ -5,12 +5,19 @@ const ExpressError = require('../utils/ExpressError');
 
 module.exports.showRanking = async (req, res) => {
     const crewId = req.params.crewId;
-    console.log("crewId, rnk", crewId)
+
     const foundCrew = await Crew.findById(crewId)
         .populate('users.user')
-        .sort({ 'users.count': -1, 'users.user.nickname': 1 });
-    console.log("showRanking",foundCrew)
-    const ranking = foundCrew.users;
+
+    const foundUser = foundCrew.users.slice();
+    const ranking = foundUser.sort((a, b) => {
+        // return b.count - a.count;
+        if (a.count === b.count) {
+            return a.user.nickname - b.user.nickname;
+        }
+        return b.count - a.count;
+    });
+
     const result = {
         ranking: ranking
     }
