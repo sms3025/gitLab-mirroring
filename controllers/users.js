@@ -142,7 +142,7 @@ module.exports.findPassword = async (req, res) => {
 
 module.exports.showMyPage = async (req, res) => {
     const userId = req.user._id;
-    const user = await User.findById({ _id: userId })
+    const user = await User.findById(userId)
         .populate('crews')
     if (!user) {
         throw new ExpressError("유효하지 않은 유저 아이디 입니다.", 401);
@@ -186,11 +186,11 @@ module.exports.deleteMyPage = async (req, res) => {
 module.exports.addMyPage = async (req, res) => {
     const userId = req.user_id;
     const text = req.body.text;
-    const user = await User.findById({ _id: userId })
+    const user = await User.findById(userId)
     if (!user) {
         throw new ExpressError("유효하지 않은 유저 아이디 입니다.", 401);
     }
-    user.goal.push(text);
+    user.goal.push({text:text});
     await user.save();
     const needMonth = new Date().getUTCMonth();
     const currentYear = new Date().getUTCFullYear();
