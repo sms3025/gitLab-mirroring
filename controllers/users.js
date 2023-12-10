@@ -1,6 +1,7 @@
 const express = require('express');
 const User = require('../models/user');
 const Crew = require('../models/crew');
+const Diary = require('../models/diary');
 const ExpressError = require('../utils/ExpressError');
 const { deleteImage } = require('../aws/index');
 const nodemailer = require('nodemailer');
@@ -55,18 +56,18 @@ module.exports.createLogin = (req, res) => {
     res.status(200).send("로그인 성공!");
 }
 
-module.exports.localLogin = async (req, res ,next) => {
+module.exports.localLogin = async (req, res, next) => {
     passport.authenticate('local', (authError, user, info) => {
-        if(authError){
+        if (authError) {
             res.status(500);
             return next(authError);
         }
-        if(!user){
+        if (!user) {
             res.status(500);
             return res.send(info.message);
         }
         return req.login(user, (loginError) => {
-            if(loginError){
+            if (loginError) {
                 res.status(500);
                 return next(loginError);
             }
@@ -146,7 +147,19 @@ module.exports.showMyPage = async (req, res) => {
     if (!user) {
         throw new ExpressError("유효하지 않은 유저 아이디 입니다.", 401);
     }
-    res.status(200).send(user);
+    //운동횟수
+    const offset = 1000 * 60 * 60 * 9
+    const krDate = new Date((new Date()).getTime() + offset)
+    const needMonth = krDate.getMonth();
+    const currentYear = krDate.getFullYear();
+    const refDate = new Date(currentYear, needMonth, 1);
+    const endDate = new Date();
+    endDate.setMonth(refDate.getMonth() + 1);
+
+    const foundDiary = await Diary.find({ uploadtime: { $gte: refDate, $lt: endDate }, author: userId })
+    const diaryCount = foundDiary.length;
+    const result = { user: user, count: diaryCount };
+    res.status(200).send(result);
 }
 
 module.exports.deleteMyPage = async (req, res) => {
@@ -158,7 +171,18 @@ module.exports.deleteMyPage = async (req, res) => {
     }
     user.goal.splice(idx, 1);
     await user.save();
-    res.status(200).send(user);
+    const offset = 1000 * 60 * 60 * 9
+    const krDate = new Date((new Date()).getTime() + offset)
+    const needMonth = krDate.getMonth();
+    const currentYear = krDate.getFullYear();
+    const refDate = new Date(currentYear, needMonth, 1);
+    const endDate = new Date();
+    endDate.setMonth(refDate.getMonth() + 1);
+
+    const foundDiary = await Diary.find({ uploadtime: { $gte: refDate, $lt: endDate }, author: userId })
+    const diaryCount = foundDiary.length;
+    const result = { user: user, count: diaryCount };
+    res.status(200).send(result);
 }
 
 module.exports.addMyPage = async (req, res) => {
@@ -170,5 +194,16 @@ module.exports.addMyPage = async (req, res) => {
     }
     user.goal.push(text);
     await user.save();
-    res.status(200).send(user);
+    const offset = 1000 * 60 * 60 * 9
+    const krDate = new Date((new Date()).getTime() + offset)
+    const needMonth = krDate.getMonth();
+    const currentYear = krDate.getFullYear();
+    const refDate = new Date(currentYear, needMonth, 1);
+    const endDate = new Date();
+    endDate.setMonth(refDate.getMonth() + 1);
+
+    const foundDiary = await Diary.find({ uploadtime: { $gte: refDate, $lt: endDate }, author: userId })
+    const diaryCount = foundDiary.length;
+    const result = { user: user, count: diaryCount };
+    res.status(200).send(result);
 }
