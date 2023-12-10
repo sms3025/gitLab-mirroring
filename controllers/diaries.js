@@ -19,10 +19,12 @@ module.exports.newDiaryForm = async (req, res) => {
 
 module.exports.createDiary = async (req, res) => {
     //create new diary
+    console.log("0")
     const userId = req.user._id;
+    console.log("1")
     const { crewId, type, time, memo } = req.body;
-    
-    
+    console.log(crewId);
+    const uploadTime = new Date();
     const diary = new Diary({
         author: userId,
         crew: crewId,
@@ -30,11 +32,11 @@ module.exports.createDiary = async (req, res) => {
         type: type,
         time: time,
         memo: memo,
-       
+        uploadtime: uploadTime,
     });
-    
+    console.log("2")
     const foundCrew = await Crew.findById(crewId);
-    
+    console.log("3");
     foundCrew.users.forEach(obj => {
         if (obj.user.toString() === userId.toString()) {
             obj.count += 1;
@@ -42,8 +44,9 @@ module.exports.createDiary = async (req, res) => {
     })
    
     await foundCrew.save()
+    console.log("4");
     await diary.save();
-    
+    console.log("5")
     res.status(200).json('success!');
 }
 
@@ -75,12 +78,12 @@ module.exports.createDiaryComment = async (req, res) => {
     const diaryId = req.params.diaryId;
     const foundDiary = await Diary.findById(diaryId);
     const userId = req.user._id;
-    
+    const uploadTime = new Date();
     const newComment = new DiaryComment({
         post: diaryId,
         author: userId,
         text: req.body.text,
-        
+        uploadtime: uploadTime
     });
     foundDiary.comments.push(newComment);
     await foundDiary.save();

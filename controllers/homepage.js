@@ -92,7 +92,7 @@ module.exports.getDiaryByDate = async (req, res) => {
     
     const needMonth = new Date().getUTCMonth();
     const needDay = req.params.day;
-    const currentYear = krDate.getUTCFullYear();
+    const currentYear = new Date().getUTCFullYear();
 
     const refDate = new Date(currentYear, needMonth, needDay);
     const endDate = new Date(currentYear, needMonth, needDay + 1);

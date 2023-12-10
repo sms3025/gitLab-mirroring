@@ -163,7 +163,7 @@ module.exports.showMyPage = async (req, res) => {
 }
 
 module.exports.deleteMyPage = async (req, res) => {
-    const userId = req.user_id;
+    const userId = req.user._id;
     const idx = req.body.idx;
     const user = await User.findById({ _id: userId })
     if (!user) {
@@ -184,14 +184,18 @@ module.exports.deleteMyPage = async (req, res) => {
 }
 
 module.exports.addMyPage = async (req, res) => {
-    const userId = req.user_id;
+    const userId = req.user._id;
     const text = req.body.text;
+    console.log(text);
     const user = await User.findById(userId)
     if (!user) {
         throw new ExpressError("유효하지 않은 유저 아이디 입니다.", 401);
     }
+    console.log("2")
     user.goal.push({text:text});
+    console.log("3");
     await user.save();
+    console.log("4");
     const needMonth = new Date().getUTCMonth();
     const currentYear = new Date().getUTCFullYear();
     const currentDate = new Date().getUTCDate();
@@ -199,6 +203,7 @@ module.exports.addMyPage = async (req, res) => {
     const endDate = new Date(currentYear, needMonth, currentDate + 1);
 
     const foundDiary = await Diary.find({ uploadtime: { $gte: refDate, $lt: endDate }, author: userId })
+    console.log("5");
     const diaryCount = foundDiary.length;
     const result = { user: user, count: diaryCount };
     res.status(200).send(result);
