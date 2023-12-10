@@ -1,0 +1,34 @@
+components:
+  schemas:
+    Notion:
+      type: object
+      properties:
+        id:
+          type: number
+          description: 게시글 번호
+        author:
+          $ref: '#/components/schemas/User'
+        crew:
+          $ref: '#/components/schemas/Crew'
+        image:
+          type: object
+          properties:
+            url:
+              type: string
+              description: 이미지가 저장된 url
+            filename: 
+              type: string
+              description: 이미지 파일 이름
+        text:
+          type: string
+          description: 게시글 내용
+        like:
+          type: number
+        comments:
+          type: array
+          items: 
+            $ref: '#/components/schemas/NotionComment'
+          description: 운동기록 댓글 리스트
+        uploadtime:
+          type: string
+        
