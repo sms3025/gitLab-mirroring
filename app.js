@@ -86,6 +86,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(express.static(path.join(__dirname, 'dist')))
 passport.use(new LocalStrategy(User.authenticate()));
 
 passport.serializeUser(User.serializeUser());
@@ -139,7 +140,7 @@ if (process.env.INSTANCE_ID === '0') {
 }
 
 app.get('/', (req, res) => {
-    res.send('home');
+    res.sendFile(path.join(__dirname, '/dist/index.html'));
 })
 
 app.all('*', (req, res, next) => {
@@ -150,6 +151,10 @@ app.use((err, req, res, next) => {
     const { statusCode = 500 } = err;
     if (!err.message) err.message = '예기치 못한 오류가 생겼습니다.'
     res.status(statusCode).send(err);
+})
+
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '/dist/index.html'))
 })
 
 app.listen(3000, () => {
