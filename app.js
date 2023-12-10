@@ -13,8 +13,8 @@ const LocalStrategy = require('passport-local');
 const dbUrl = 'mongodb://127.0.0.1:27017/health-crew';
 const User = require('./models/user');
 const mongoSanitize = require('express-mongo-sanitize');
-const passportConfig = require('./passport');
-//const helmet = require('helmet');
+
+
 
 
 const cron = require('node-cron');
@@ -62,7 +62,7 @@ app.use(function (req, res, next) {
         next();
     }
 });
-//passportConfig();
+
 const sessionConfig = { //세션 정보 추가
     store, //저장소 정보
     name: 'session',
@@ -121,7 +121,6 @@ app.use('/crew', rankingRoutes);
 app.use('/explore', exploreRoutes);
 
 
-// 매월 0시에 실행
 
 if (process.env.INSTANCE_ID === '0') {
     cron.schedule('0 0 * * *', async () => {

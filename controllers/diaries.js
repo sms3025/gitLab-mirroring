@@ -6,7 +6,6 @@ const Crew = require('../models/crew');
 const { deleteImage } = require('../aws/index');
 
 module.exports.newDiaryForm = async (req, res) => {
-    // render new diary form
     const userId = req.user._id
     const user = await User.findById({ _id: userId }).populate('crews')
     if (!user) {
@@ -18,7 +17,6 @@ module.exports.newDiaryForm = async (req, res) => {
 }
 
 module.exports.createDiary = async (req, res) => {
-    //create new diary
     console.log("0")
     const userId = req.user._id;
     console.log("1")

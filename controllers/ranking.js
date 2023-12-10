@@ -1,7 +1,6 @@
 const Crew = require('../models/crew');
-const Diary = require('../models/diary');
 
-const ExpressError = require('../utils/ExpressError');
+
 
 module.exports.showRanking = async (req, res) => {
     const crewId = req.params.crewId;
@@ -11,7 +10,6 @@ module.exports.showRanking = async (req, res) => {
 
     const foundUser = foundCrew.users.slice();
     const ranking = foundUser.sort((a, b) => {
-        // return b.count - a.count;
         if (a.count === b.count) {
             const aString = a.user.nickname.toString();
             const bString = b.user.nickname.toString();

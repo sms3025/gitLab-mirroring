@@ -1,6 +1,4 @@
 const Notion = require('../models/notion');
-const ExpressError = require('../utils/ExpressError');
-const { isLoggedIn } = require('../middleware');
 const { deleteImage } = require('../aws/index');
 const NotionComment = require('../models/notioncomment')
 

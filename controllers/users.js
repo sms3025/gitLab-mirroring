@@ -1,4 +1,3 @@
-const express = require('express');
 const User = require('../models/user');
 const Crew = require('../models/crew');
 const Diary = require('../models/diary');
@@ -18,16 +17,12 @@ function createRandomPassword(variable, passwordLength) {
 module.exports.createRegister = async (req, res) => {
     try {
         const { name, loginid, password, nickname, email } = req.body;
-        //console.log(req.body);
         if (!password) {
             throw new ExpressError("패스워드가 없습니다.", 403);
         }
         const user = new User({ name, loginid, nickname, email })
         const newUser = await User.register(user, password);
-        // req.login(newUser, err => {
-        //     if (err) return next(err);
-        //     res.status(200);
-        // })
+        
         res.status(200).send("등록이 완료되었습니다.");
     } catch (e) {
         throw new ExpressError("중복회원이 존재합니다.", 403);
@@ -147,7 +142,6 @@ module.exports.showMyPage = async (req, res) => {
     if (!user) {
         throw new ExpressError("유효하지 않은 유저 아이디 입니다.", 401);
     }
-    //운동횟수
     
     const needMonth = new Date().getUTCMonth();
     const currentYear = new Date().getUTCFullYear();

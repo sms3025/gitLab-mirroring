@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const catchAsync = require('../utils/catchAsync');
 const passport = require('passport');
-const { isLoggedIn, isNotLoggedIn } = require('../middleware');
+const { isLoggedIn } = require('../middleware');
 const users = require('../controllers/users');
 
 /**

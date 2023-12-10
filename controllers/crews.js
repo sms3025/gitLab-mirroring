@@ -33,9 +33,7 @@ module.exports.createCrew = async (req, res) => {
 }
 
 module.exports.showCrew = async (req, res) => {
-    //crew 들어온 후 홈화면
-
-    // Diary db에서 운동기록
+    
     const crewId = req.params.crewId;
     const crew = await Crew.findById(crewId)
         .populate('users.user')
@@ -52,10 +50,7 @@ module.exports.showCrew = async (req, res) => {
             }
         })
         .sort({ 'uploadtime': -1 });
-    //if (!diaries) {
-        //throw new ExpressError("there is no diary", 400);
-    //}
-    // notion db에서 게시글
+    
     
     const notions = await Notion.find({ crew: crewId })
         .populate('author')
@@ -66,9 +61,7 @@ module.exports.showCrew = async (req, res) => {
             }
         })
         .sort({ 'uploadtime': -1 })
-    //if (!notions) {
-        //throw new ExpressError("there is no notion", 400);
-    //}
+    
   
     const result = {
         diaries: diaries,
@@ -141,7 +134,6 @@ module.exports.addNewMember = async (req, res) => {
 }
 
 module.exports.deleteCrewMember = async (req, res) => {
-    // 나가는 멤버가 작성한 운동기록, 게시글, 댓글 삭제, 사용자의 크루 목록에서 크루 삭제, 크루 유저에서 해당 유저 삭제 
     const userId = req.user._id;
     const crewId = req.params.crewId;
 
