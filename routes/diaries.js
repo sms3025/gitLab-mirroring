@@ -90,7 +90,7 @@ router.route('/new')
  */
 router.route('/:diaryId')
     .get(isLoggedIn, catchAsync(diaries.showDiary))
-    .delete(isLoggedIn, catchAsync(diaries.deleteDiary))
+    
 
 /**
  * @swagger
@@ -123,18 +123,6 @@ router.route('/:diaryId')
  */
 router.route('/:diaryId/comments')
     .post(isLoggedIn, catchAsync(diaries.createDiaryComment))
-
-/**
- * @swagger
- * /diary/{diaryId}/comments/{commentId}:
- *  
- * 
- *  delete:
- *      tags: [diary]
- *      summary: 해당 운동기록에 해당 댓글 삭제하기
- */
-router.route('/:diaryId/comments/:commentId')
-    .delete(isLoggedIn, catchAsync(diaries.deleteDiaryComment))
 
 
 module.exports = router;

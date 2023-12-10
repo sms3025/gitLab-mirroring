@@ -36,7 +36,6 @@ const { isLoggedIn } = require('../middleware');
  *              description: OK
  */
 router.route('/:crewId/notion')
-    .get()
     .post(isLoggedIn, upload.single('filename'), catchAsync(notions.createNotion))
 
 /**
@@ -72,7 +71,7 @@ router.route('/:crewId/notion')
  */
 router.route('/:crewId/notion/:notionId')
     .get(isLoggedIn, catchAsync(notions.showNotion))
-    .delete(isLoggedIn, catchAsync(notions.deleteNotion))
+    
 
 /**
  * @swagger
@@ -110,14 +109,6 @@ router.route('/:crewId/notion/:notionId')
 router.route('/:crewId/notion/:notionId/comments')
     .post(isLoggedIn, catchAsync(notions.createNotionComment))
 
-/**
- * @swagger
- * /crew/:crewId/notion/:notionId/comments/:commentId:
- *  delete:
- *      tags: [notion]
- *      summary: 해당 게시글에 해당 댓글 삭제하기
- */
-router.route('/:crewId/notion/:notionId/comments/:commentId')
-    .delete(isLoggedIn, catchAsync(notions.deleteNotionComment))
+
 
 module.exports = router;

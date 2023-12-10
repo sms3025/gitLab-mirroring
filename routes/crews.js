@@ -84,8 +84,8 @@ router.route('/new')
  * 
  */
 router.route('/:crewId')
-    .get(catchAsync(crews.showCrew))
-    .delete(catchAsync(crews.deleteCrew))
+    .get(isLoggedIn, catchAsync(crews.showCrew))
+    
 
 
 
@@ -112,6 +112,6 @@ router.route('/:crewId')
  */
 router.route('/:crewId/user/')
     .post(isLoggedIn, catchAsync(crews.addNewMember))
-    .delete(catchAsync(crews.deleteCrewMember))
+    
 
 module.exports = router;
